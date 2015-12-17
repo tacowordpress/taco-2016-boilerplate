@@ -1,0 +1,79 @@
+
+# fail-safe in case the conf file doesn't have it
+Options All -Indexes
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine on
+
+
+
+# CUSTOM SERVER VARS
+
+# You must use 'HTTP_' as prefix when setting custom vars.
+# This a security check on media temple servers
+
+# IMPORTANT: Do not change the order of the 3 rewrites below
+RewriteCond %{SERVER_NAME} !vermilion\.com
+RewriteRule ^ - [E=HTTP_APP_ENVIRONMENT:prod]
+
+RewriteCond %{SERVER_NAME} (\.vermilion\.com)
+RewriteRule ^ - [E=HTTP_APP_ENVIRONMENT:staging]
+
+RewriteCond %{SERVER_NAME} \.dev
+RewriteRule ^ - [E=HTTP_APP_ENVIRONMENT:dev]
+
+# fail-safe for apache redirects
+SetEnvIf REDIRECT_HTTP_APP_ENVIRONMENT (.+) HTTP_APP_ENVIRONMENT=$1
+
+# WP REWRITES/REDIRECTS
+
+
+# DENY ACCESS TO FILES/DIRECTORIES
+
+# If you are going to forbid access to a directory, do something like the below (commented out).
+#RewriteRule ^folder_name(.*) - [F,L,NC]
+
+# forbid access to certain files by name
+<FilesMatch "(\.md|\.git\|\.gitignore|\.sql|\.sql.gz)">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# OPTIMIZATION
+<IfModule mod_headers.c>
+  Header unset ETag
+  FileETag none
+</IfModule>
+
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+
+<ifModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/gif "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType text/x-javascript "access plus 1 month"
+  ExpiresByType application/x-shockwave-flash "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresDefault "access plus 2 days"
+</ifModule>

@@ -1,5 +1,4 @@
 <?php
 
-$install_dir = __DIR__.'/../../../../wordpress/';
-chdir($install_dir);
+chdir(ABSPATH);
 include('wp-load.php');
