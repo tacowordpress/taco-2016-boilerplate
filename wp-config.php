@@ -20,23 +20,33 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'wptest4');
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('ENVIRONMENT_DEV', 'dev');
+define('ENVIRONMENT_STAGE', 'stage');
+define('ENVIRONMENT_PROD', 'prod');
 
-/** MySQL database username */
-define('DB_USER', 'root');
-
-/** MySQL database password */
-define('DB_PASSWORD', 'root');
-
-/** MySQL hostname */
-define('DB_HOST', 'localhost');
-
-/** Database Charset to use in creating database tables. */
-define('DB_CHARSET', 'utf8');
-
-/** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '');
-
+if(preg_match('/(localhost|\.dev)/', $_SERVER['HTTP_HOST'])) {
+  define('ENVIRONMENT', ENVIRONMENT_DEV);
+  define('DB_USER',     '');
+  define('DB_PASSWORD', '');
+  define('DB_HOST',     'localhost');
+  define('DB_NAME',     '');
+  define('SAVEQUERIES', true);
+} elseif(preg_match('/(.vermilion.com)/', $_SERVER['HTTP_HOST'])) {
+  define('ENVIRONMENT', ENVIRONMENT_STAGE);
+  define('DB_USER',     '');
+  define('DB_PASSWORD', '');
+  define('DB_HOST',     'localhost');
+  define('DB_NAME',     '');
+  define('SAVEQUERIES', true);
+} else {
+  define('ENVIRONMENT', ENVIRONMENT_PROD);
+  define('DB_USER',     '');
+  define('DB_PASSWORD', '');
+  define('DB_HOST',     'localhost');
+  define('DB_NAME',     '');
+}
 /**#@+
  * Authentication Unique Keys and Salts.
  *
@@ -63,7 +73,7 @@ define('NONCE_SALT',       'put your unique phrase here');
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'wp_';
+$table_prefix  = 'sitename_wp_';
 
 /**
  * For developers: WordPress debugging mode.
