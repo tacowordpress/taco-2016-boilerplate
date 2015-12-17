@@ -1,0 +1,65 @@
+@mixin border_radius($value) {
+  -webkit-border-radius: $value;
+  -moz-border-radius: $value;
+  border-radius: $value;
+}
+
+// good for vertical align middling
+@mixin translate($value) {
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -ms-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+@mixin tranzish($value) {
+  -webkit-transition: $value;
+  -moz-transition: $value;
+  -ms-transition: $value;
+  -o-transition: $value;
+  transition: $value;
+}
+
+@mixin transform($value) {
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -o-transform: $value;
+}
+
+@mixin delay($value) {
+  -webkit-transition-delay: $value;
+  -moz-transition-delay: $value;
+  -o-transition-delay: $value;
+  transition-delay: $value;
+}
+
+@mixin box_shadow($value) {
+  -moz-box-shadow: $value;
+  -webkit-box-shadow: $value;
+  box-shadow: $value;
+}
+
+@mixin cube_grow_bottom_left($left, $top) {
+  box-shadow:
+-1px 0px 1px $left,
+0px 1px 1px $top,
+-2px 1px 1px $left,
+-1px 2px 1px $top,
+-3px 2px 1px $left,
+-2px 3px 1px $top,
+-4px 3px 1px $left,
+-3px 4px 1px $top,
+-5px 4px 1px $left,
+-4px 5px 1px $top,
+-6px 5px 1px $left,
+-5px 6px 1px $top,
+-7px 6px 1px $left,
+-6px 7px 1px $top,
+-8px 7px 1px $left,
+-7px 8px 1px $top,
+-9px 8px 1px $left,
+-8px 9px 1px $top,
+-10px 9px 1px $left,
+-9px 10px 1px $top;
+}
+

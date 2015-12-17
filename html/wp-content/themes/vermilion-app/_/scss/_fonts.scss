@@ -1,0 +1,25 @@
+// normal font definitions
+@mixin sans_serif {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+}
+
+@mixin sans_serif_semi_bold {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+}
+
+@mixin sans_serif_bold {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+}
+
+@mixin sans_serif_extra_bold {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 800;
+}
+
+
+
+
+
