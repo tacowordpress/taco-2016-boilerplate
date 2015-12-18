@@ -146,7 +146,7 @@ function get_app_icons() {
   
   $app_dir = __DIR__.'/../';
 
-  $files = scandir($app_dir.'/app-icons');
+  $files = scandir($app_dir.'/_/img/app-icons');
   $paths = [];
   foreach($files as $file)  {
     if(!preg_match('/\.png/', $file)) continue;

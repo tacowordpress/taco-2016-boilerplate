@@ -23,12 +23,12 @@ RewriteRule ^ - [E=HTTP_APP_ENVIRONMENT:staging]
 RewriteCond %{SERVER_NAME} \.dev
 RewriteRule ^ - [E=HTTP_APP_ENVIRONMENT:dev]
 
-RewriteRule ^ - [E=HTTP_APP_BOOTSTRAP:%{DOCUMENT_ROOT}/wp-load.php]
+RewriteRule ^ - [E=HTTP_BOOTSTRAP_WP:%{DOCUMENT_ROOT}/wp-load.php]
 
 
 # fail-safe for apache redirects
 SetEnvIf REDIRECT_HTTP_APP_ENVIRONMENT (.+) HTTP_APP_ENVIRONMENT=$1
-SetEnvIf REDIRECT_HTTP_APP_BOOTSTRAP (.+) HTTP_APP_BOOTSTRAP=$1
+SetEnvIf REDIRECT_HTTP_BOOTSTRAP_WP (.+) HTTP_BOOTSTRAP_WP=$1
 
 # exclude public access to composer's vendor dir from the theme folder
 # typically the vendor dir is never publically accessible

@@ -7,9 +7,6 @@
     "tacowordpress/tacowordpress": "dev-master",
     "tacowordpress/addbysearch": "dev-uses-new-frontend-loader",
     "phpmailer/phpmailer": "dev-master",
-    "league/oauth2-client": "~1.0@dev",
-    "phpfastcache/phpfastcache": "3.0.16",
-    "monolog/monolog": "~1.16@dev"
   },
   "require-dev": {
     "fzaninotto/faker": "v1.5.0"

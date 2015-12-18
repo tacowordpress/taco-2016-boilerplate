@@ -1,5 +1,8 @@
 <?php
 
+namespace AppLibrary;
+
+
 class States {
   
   /**
