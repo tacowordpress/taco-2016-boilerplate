@@ -1,4 +1,0 @@
-# exclude public access to composer's vendor dir from the theme folder
-# typically the vendor dir is never publically acessible
-RewriteEngine on
-RewriteRule ^taco-app\/vendor($|/) - [L,R=302]
