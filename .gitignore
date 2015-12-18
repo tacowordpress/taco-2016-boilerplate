@@ -3,6 +3,7 @@
 !/html/wp-content/
 
 # ignore composer dir
+/vendor
 html/wp-content/themes/vermilion-app/taco-app/vendor/*
 !html/.htaccess
 

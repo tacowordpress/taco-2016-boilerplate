@@ -1,0 +1,21 @@
+{
+  "require": {
+    "johnpbloch/wordpress": "^4.4"
+  },
+  "extra": {
+    "wordpress-install-dir": "wordpress-temp"
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "WpHooks\\WpUpdateHooks::updateWpConfig"
+    ],
+    "post-install-cmd": [
+      "WpHooks\\WpUpdateHooks::updateWpConfig"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "WpHooks\\": "WpHooks/src/"
+    }
+  }
+}
