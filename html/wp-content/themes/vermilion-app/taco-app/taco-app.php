@@ -21,10 +21,16 @@ $loader->addNamespace('\AppLibrary\\', __DIR__.'/lib/AppLibrary/src');
 
 
 // traits
+require_once __DIR__.'/traits/Taquito.php';
 
 // settings
 require_once __DIR__.'/posts/ThemeOptionBase.php';
 require_once __DIR__.'/posts/ThemeOption.php';
+
+// forms
+require_once __DIR__.'/forms/core/loader.php';
+require_once __DIR__.'/forms/FormFields.php';
+require_once __DIR__.'/forms/FormConfig.php';
 
 //posts
 require_once __DIR__.'/posts/Page.php';
