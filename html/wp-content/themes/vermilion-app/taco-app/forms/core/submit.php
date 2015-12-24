@@ -15,7 +15,7 @@ function redirect_to_referring_page($data) {
 }
 
 // Bootstrap WordPress
-include __DIR__.'/../../../../'.$_SERVER['HTTP_WP_VERSION_FOLDER_NAME'].'/wp-load.php';
+include getenv('HTTP_BOOTSTRAP_WP');
 
 
 // Helpers
@@ -101,6 +101,9 @@ if(!$record->verifyNonce($nonce)) {
 }
 
 // Get data for most fields
+if(array_key_exists('form_config', $source)){
+  $record->form_config_id = $source['form_config'];
+}
 $fields = $record->getFields();
 $record_info = array();
 foreach($fields as $k=>$field) {
