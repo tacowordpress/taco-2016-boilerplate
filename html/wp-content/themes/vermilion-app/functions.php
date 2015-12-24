@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/taco-app/config.php';
+
 // load core app files through taco-app.php
 require_once dirname(__FILE__).'/taco-app/taco-app.php';
 
