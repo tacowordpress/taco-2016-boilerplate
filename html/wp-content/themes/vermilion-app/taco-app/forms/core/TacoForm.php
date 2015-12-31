@@ -268,6 +268,11 @@ class TacoForm {
         ? 'hide_label'
         : '';
       
+      if(array_key_exists('type', $v) && $v['type'] === 'checkbox') {
+        $html[] = $this->renderCheckBox($k, $v);
+        continue;
+      }
+
       $label = sprintf(
         '<label for="%s" class="%s">%s</label>',
         $id,
@@ -284,6 +289,22 @@ class TacoForm {
         $label.' '.$this->conf_instance->getRenderPublicField($k, $v)
       );
     }
+    return join('', $html);
+  }
+
+
+  /**
+   * renders a checkbox with label wraped around it
+   * @return string html
+   */
+  public function renderCheckBox($key, $value) {
+    $html = [];
+    $html[] = self::rowColumnWrap(sprintf(
+      '<label for="%s">%s %s</label>',
+      \AppLibrary\Str::machine($key, '-'),
+      $this->conf_instance->getRenderPublicField($key, $value),
+      \AppLibrary\Str::human($key)
+    ));
     return join('', $html);
   }
 
