@@ -7,11 +7,12 @@ $form = new TacoForm(
     'hide_labels' => false,
     'success_message' => 'great!',
     'error_message' => 'not great!',
+    'novalidate' => true,
     'fields' =>  array(
       'first_name' => array('type' => 'text'),
       'last_name' => array('type' => 'text'),
-      'email_address' => array('type' => 'email'),
-      'essay' => array('type' => 'textarea'),
+      'email_address' => array('type' => 'email', 'required' => true),
+      'essay' => array('type' => 'textarea', 'required' => true, 'maxlength' => 400),
       'subscribe' => array('type' => 'checkbox')
     )
   )

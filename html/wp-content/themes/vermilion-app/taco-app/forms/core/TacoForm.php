@@ -5,12 +5,13 @@
 add_action('init', 'TacoForm::getSessionData');
 
 class TacoForm {
+  use FormValidators;
 
   private $settings = [];
   
   public static $invalid = false;
   public static $success = false;
-
+  public static $session_field_errors = array();
   public $fields = null;
   public $template_html = null;
   public $conf_instance = null;
@@ -37,6 +38,7 @@ class TacoForm {
       'id' => '',
       'method' => 'post',
       'action' => null,
+      'novalidate' => false,
       'use_ajax' => false,
       'hide_labels' => false,
       'column_classes' => 'small-12 columns',
@@ -104,10 +106,14 @@ class TacoForm {
 
     // lastly use the WordPress admin's message settings
     if(strlen($this->conf_instance->get('form_success_message'))) {
-      $this->settings['success_message'] = $this->conf_instance->get('form_success_message');
+      $this->settings['success_message'] = $this->conf_instance->get(
+        'form_success_message'
+      );
     }
     if(strlen($this->conf_instance->get('form_error_message'))) {
-      $this->settings['error_message'] = $this->conf_instance->get('form_error_message');
+      $this->settings['error_message'] = $this->conf_instance->get(
+        'form_error_message'
+      );
     }
 
     // merge default settings with user settings
@@ -200,12 +206,13 @@ class TacoForm {
     // start the form html using an array
     $html = [];
     $html[] = sprintf(
-      '<form action="%s" method="%s" class="%s" id="%s" data-use-ajax="%s">',
+      '<form action="%s" method="%s" class="%s" id="%s" data-use-ajax="%s" %s>',
       $this->settings['action'],
       $this->settings['method'],
       $this->settings['css_class']. ' taco-forms',
       $this->settings['id'],
-      $this->settings['use_ajax']
+      $this->settings['use_ajax'],
+      ($this->settings['novalidate']) ? 'novalidate' : ''
     );
 
     // get neccessary fields CSRF protection
@@ -268,8 +275,17 @@ class TacoForm {
         ? 'hide_label'
         : '';
       
+      // does this field have an error
+      $has_error = self::hasError($k);
+      $error_columns_class = ($has_error)
+        ? 'small-12 columns taco-field-error' :
+        'small-12 columns';
+
       if(array_key_exists('type', $v) && $v['type'] === 'checkbox') {
-        $html[] = $this->renderCheckBox($k, $v);
+        $html[] = self::rowColumnWrap(
+          $this->renderCheckBox($k, $v),
+          $error_columns_class
+        );
         continue;
       }
 
@@ -284,9 +300,12 @@ class TacoForm {
         && !array_key_exists('placeholder', $v)) {
         $v['placeholder'] = \AppLibrary\Str::human($k);
       }
-
+      
       $html[] = self::rowColumnWrap(
-        $label.' '.$this->conf_instance->getRenderPublicField($k, $v)
+        self::renderFieldErrors($k)
+        .' '.$label.' '
+        .$this->conf_instance->getRenderPublicField($k, $v),
+        $error_columns_class
       );
     }
     return join('', $html);
@@ -294,17 +313,48 @@ class TacoForm {
 
 
   /**
+   * renders a field's errors inline
+   * @param $key string
+   * @return string html
+   */
+  public function renderFieldErrors($key) {
+    if(array_key_exists($key, self::$session_field_errors)) {
+      return sprintf(
+        '<span class="taco-field-error-message">%s</span>',
+        self::$session_field_errors[$key]
+      );
+    }
+    return '';
+  }
+
+
+  /**
+   * does a field error exist
+   * @param $key string
+   * @return boolean
+   */
+  public function hasError($key) {
+    if(array_key_exists($key, self::$session_field_errors)) {
+      return true;
+    }
+    return false;
+  }
+
+
+  /**
    * renders a checkbox with label wraped around it
+   * @param $key string
+   * @param $value array
    * @return string html
    */
   public function renderCheckBox($key, $value) {
     $html = [];
-    $html[] = self::rowColumnWrap(sprintf(
+    $html[] = sprintf(
       '<label for="%s">%s %s</label>',
       \AppLibrary\Str::machine($key, '-'),
       $this->conf_instance->getRenderPublicField($key, $value),
       \AppLibrary\Str::human($key)
-    ));
+    );
     return join('', $html);
   }
 
@@ -369,13 +419,85 @@ class TacoForm {
    * validate the form
    * @return boolean
    */
-  public static function validate() {
+  public static function validate($source_fields, $form_config) {
     $invalid = false;
+    $fields = unserialize(unserialize($form_config->get('fields')));
+    foreach($fields as $k => $v) {
+      $validation_types  = [];
+
+      // $validation_types[string] where string is the method name
+      // of the trait method in FormValidators.php
+      if(array_key_exists('required', $v)) {
+        $validation_types['checkRequired'] = true;
+      }
+      if(array_key_exists('type', $v) && $v['type'] === 'email') {
+        $validation_types['checkEmail'] = 1;
+      }
+      if(array_key_exists('type', $v) && $v['type'] === 'url') {
+        $validation_types['checkURL'] = 1;
+      }
+      if(array_key_exists('maxlength', $v)) {
+        $validation_types['checkMaxLength'] = $v['maxlength'];
+      }
+      if(\AppLibrary\Arr::iterable($validation_types)) {
+        list($invalid, $errors) = self::validateFieldRequirements(
+          $validation_types,
+          $v['value'],
+          $k
+        );
+        self::pushErrors($k, join(', ', $errors)); // field key, $errors
+        unset($errors);
+        unset($validation_types);
+      }
+    }
+  
     if($invalid) {
       self::setInvalid();
     }
     self::setSuccess();
     return true;
+  }
+
+
+  /**
+   * push errors
+   * @param $key string
+   * @param $errors array
+   * @return void
+   */
+  public static function pushErrors($key, $errors) {
+    session_start();
+    if(is_array($errors)) {
+      $errors = join(', ', $errors);
+    }
+    if(!array_key_exists('session_field_errors', $_SESSION)) {
+      $_SESSION['session_field_errors'] = [];
+    }
+    $_SESSION['session_field_errors'][$key] = $errors;
+    session_write_close();
+  }
+
+
+  /**
+   * check all field requirements
+   * @param $types array of requirements
+   * @param $value string
+   * @return array (boolean, array(error1, error2...))
+   */
+  public static function validateFieldRequirements($types, $value, $key) {
+    $invalid_array = [false];
+    $errors = [];
+    foreach($types as $method_name => $property_value) {
+      $invalid[] = self::$method_name(
+        $value,
+        $property_value
+      );
+    }
+    if(in_array(false, $invalid_array)) {
+      $invalid = true;
+      $errors[] = sprintf('%s is invalid', $key);
+    }
+    return array($invalid, $errors);
   }
 
 
@@ -395,6 +517,12 @@ class TacoForm {
       self::$success = true;
       $_SESSION['form_conf_success'] = false;
     }
+    if(array_key_exists('session_field_errors', $_SESSION)
+      && $_SESSION['session_field_errors']) {
+      self::$session_field_errors = $_SESSION['session_field_errors'];
+      unset($_SESSION['session_field_errors']);
+    }
+    session_write_close();
   }
 
 

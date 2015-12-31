@@ -54,8 +54,8 @@ class FormEntry extends \Taco\Post {
     if(!array_key_exists('form_config', $_POST)) return false;
     $form_config = FormConfig::find($_POST['form_config']);
     if(!\AppLibrary\Obj::iterable($form_config)) return false;
-    $is_valid = TacoForm::validate($fields);
-
+    $is_valid = TacoForm::validate($fields, $form_config);
+    
     $use_ajax = (array_key_exists('use_ajax', $_POST))
       ? true
       : false;
