@@ -7,6 +7,7 @@
 function app_get_css() {
   return array(
     'all'=>array(
+      'foundation' => '_/lib/foundation/css/foundation.min.css',
       'main' => '_/css/main.css'
     )
   );

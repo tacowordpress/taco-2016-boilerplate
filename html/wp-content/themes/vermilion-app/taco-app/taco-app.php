@@ -29,8 +29,8 @@ require_once __DIR__.'/posts/ThemeOption.php';
 
 // forms
 require_once __DIR__.'/forms/core/loader.php';
-require_once __DIR__.'/forms/FormFields.php';
-require_once __DIR__.'/forms/FormConfig.php';
+// require_once __DIR__.'/forms/FormFields.php';
+// require_once __DIR__.'/forms/FormConfig.php';
 
 //posts
 require_once __DIR__.'/posts/Page.php';

@@ -4,8 +4,8 @@
 class FormEntry extends \Taco\Post {
   use Taquito;
   
+
   public $form_config_id = null;
-  public $form_config = null;
 
   public function getFields() {
     $fields = array(
@@ -22,7 +22,8 @@ class FormEntry extends \Taco\Post {
   }
 
 
-  public function loadFormConfig() {
+  public function getFieldsFromFormEntryConf() {
+    
     if(!$this->form_config_id) {
       $post_id = self::getPostID();
       if(!is_numeric($post_id)) return array();
@@ -31,30 +32,42 @@ class FormEntry extends \Taco\Post {
     } else {
       $conf_id = $this->form_config_id;
     }
-    $this->form_config = FormConfig::find($conf_id);
-  }
+ 
+    $conf_object = FormConfig::find($conf_id);
+    if(!\AppLibrary\Obj::iterable($conf_object)) return array();
+    if(!strlen($conf_object->get('form_fields'))) return array();
 
-
-  public function getFieldsFromFormEntryConf() {
+    $fields_objects = \AddBySearch\AddBySearch::getPostsFromOrder(
+      $conf_object->get('form_fields')
+    );
     
-    $this->loadFormConfig();
-    $form_config = $this->form_config;
+    $entry_fields = FormConfig::makeFieldsConfigFromFieldPosts(
+      $fields_objects
+    );
 
-    if(!\AppLibrary\Obj::iterable($form_config)) return array();
-    if(!strlen($form_config->get('fields'))) return array();
-
-    $fields = unserialize(unserialize($form_config->get('fields')));
-    if(!\AppLibrary\Arr::iterable($fields)) return array();
-    return $fields;
+    return (Arr::iterable($entry_fields))
+      ? $entry_fields
+      : array();
   }
 
+  public static function getErrorMessages() {
+    $custom_errors = array();
+    if(file_exists(__DIR__.'/../FormCustomErrors.php')) {
+      $custom_errors = include __DIR__.'/../FormCustomErrors.php';
+    }
+    return array_merge(
+      include __DIR__.'/FormErrors.php',
+      $custom_errors
+    );
+  }
 
   public function isValid($fields) {
     // do validation stuff
+    
     if(!array_key_exists('form_config', $_POST)) return false;
     $form_config = FormConfig::find($_POST['form_config']);
     if(!\AppLibrary\Obj::iterable($form_config)) return false;
-    $is_valid = TacoForm::validate($fields);
+    $is_valid = $form_config->validate($fields);
 
     $use_ajax = (array_key_exists('use_ajax', $_POST))
       ? true
@@ -76,20 +89,14 @@ class FormEntry extends \Taco\Post {
   }
 
   public function save() {
-    TacoForm::setSuccess();
+    FormConfBase::setSuccess();
     return parent::save();
   }
 
-  public function getURLAfterSuccess() {
-    if($this->form_config && $this->form_config->get('success_redirect_url')) {
-      $url = $this->form_config->get('success_redirect_url');
-    } else {
-      $url = $_SERVER['HTTP_REFERER'];
-    }
-    header(sprintf('Location: %s', $url));
-    exit;
-  }
 
+  public function getPermalinkAfterInsert() {
+    return header(sprintf('Location: %s', $_SERVER['HTTP_REFERER']));
+  }
 
   public static function getFormConfigs() {
     return FormConfig::getPairs();

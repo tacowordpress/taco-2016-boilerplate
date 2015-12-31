@@ -12,7 +12,8 @@ class FormField extends \Taco\Post {
       'options' => array(
         'type' => 'select',
         'options' => array()
-      )
+      ),
+      'field_type_error' => array('type' => 'text')
     );
   }
 
