@@ -420,10 +420,20 @@ class TacoForm {
    * @return boolean
    */
   public static function validate($source_fields, $form_config) {
-    $invalid = false;
+    if(array_key_exists('form_config', $source_fields)) {
+      unset($source_fields['form_config']);
+    }
+    $invalid_array = [];
     $fields = unserialize(unserialize($form_config->get('fields')));
+
     foreach($fields as $k => $v) {
       $validation_types  = [];
+
+      if(array_key_exists($k, $source_fields)) {
+        $source_value = $source_fields[$k];
+      } else {
+        $source_value = null;
+      }
 
       // $validation_types[string] where string is the method name
       // of the trait method in FormValidators.php
@@ -442,16 +452,18 @@ class TacoForm {
       if(\AppLibrary\Arr::iterable($validation_types)) {
         list($invalid, $errors) = self::validateFieldRequirements(
           $validation_types,
-          $v['value'],
+          $source_value,
           $k
         );
+        if($invalid) {
+          $invalid_array[] = true;
+        }
         self::pushErrors($k, join(', ', $errors)); // field key, $errors
         unset($errors);
         unset($validation_types);
       }
     }
-  
-    if($invalid) {
+    if(in_array(true, $invalid_array)) {
       self::setInvalid();
     }
     self::setSuccess();
@@ -485,17 +497,21 @@ class TacoForm {
    * @return array (boolean, array(error1, error2...))
    */
   public static function validateFieldRequirements($types, $value, $key) {
-    $invalid_array = [false];
+    $invalid_array = [];
     $errors = [];
+
     foreach($types as $method_name => $property_value) {
-      $invalid[] = self::$method_name(
+      $bool = self::$method_name(
         $value,
         $property_value
       );
+      if($bool) {
+        $invalid_array[] = true;
+      }
     }
-    if(in_array(false, $invalid_array)) {
+    if(in_array(true, $invalid_array)) {
       $invalid = true;
-      $errors[] = sprintf('%s is invalid', $key);
+      $errors[] = sprintf('%s is invalid', \AppLibrary\Str::human($key));
     }
     return array($invalid, $errors);
   }
