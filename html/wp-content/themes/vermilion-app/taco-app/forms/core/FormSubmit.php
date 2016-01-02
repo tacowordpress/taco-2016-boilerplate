@@ -4,8 +4,8 @@
 
 include getenv('HTTP_BOOTSTRAP_WP'); // bootstrap WordPress
 
-if(array_key_exists('taco-form-submission', $_POST)
-  && $_POST['taco-form-submission'] == true) {
+if(array_key_exists('taco_form_submission', $_POST)
+  && $_POST['taco_form_submission'] == true) {
   FormSubmit::processSubmission();
 }
 

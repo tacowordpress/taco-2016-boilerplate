@@ -12,6 +12,8 @@ class TacoForm {
   public static $invalid = false;
   public static $success = false;
   public static $session_field_errors = array();
+  public static $session_field_values = array();
+
   public $fields = null;
   public $template_html = null;
   public $conf_instance = null;
@@ -223,7 +225,7 @@ class TacoForm {
       '<input name="form_config" type="hidden" value="%d">',
       $this->conf_ID
     );
-    $html[] = '<input name="taco-form-submission" type="hidden" value="true>';
+    $html[] = '<input name="taco_form_submission" type="hidden" value="true">';
 
     if($this->settings['use_ajax']) {
       $html[] = '<input type="hidden" name="use_ajax" value="1">';
@@ -280,6 +282,11 @@ class TacoForm {
       $error_columns_class = ($has_error)
         ? 'small-12 columns taco-field-error' :
         'small-12 columns';
+
+      // get the value if it exists
+      $v['value'] = (self::getSessionFieldValue($k)) ?
+        self::getSessionFieldValue($k)
+        : '';
 
       if(array_key_exists('type', $v) && $v['type'] === 'checkbox') {
         $html[] = self::rowColumnWrap(
@@ -464,7 +471,9 @@ class TacoForm {
       }
     }
     if(in_array(true, $invalid_array)) {
+      self::setValuesIfErrorsExist($source_fields);
       self::setInvalid();
+      return false;
     }
     self::setSuccess();
     return true;
@@ -538,6 +547,11 @@ class TacoForm {
       self::$session_field_errors = $_SESSION['session_field_errors'];
       unset($_SESSION['session_field_errors']);
     }
+    if(array_key_exists('session_field_values', $_SESSION)
+      && $_SESSION['session_field_values']) {
+      self::$session_field_values = $_SESSION['session_field_values'];
+      unset($_SESSION['session_field_values']);
+    }
     session_write_close();
   }
 
@@ -588,6 +602,35 @@ class TacoForm {
       }
     }
     session_write_close();
+  }
+
+
+  /**
+   * set values after submission if the form has errors
+   * @return void
+   */
+  public static function setValuesIfErrorsExist($source_fields) {
+    session_start();
+    if(!array_key_exists('session_field_values', $_SESSION)) {
+      $_SESSION['session_field_values'] = array();
+      foreach($source_fields as $k => $v) {
+        $_SESSION['session_field_values'][$k] = $v;
+      }
+    }
+    session_write_close();
+  }
+
+
+  /**
+   * get a session field value
+   * @param  $key string
+   * @return string or boolean
+   */
+  private function getSessionFieldValue($key) {
+    if(array_key_exists($key, self::$session_field_values)) {
+      return self::$session_field_values[$key];
+    }
+    return false;
   }
 
 }

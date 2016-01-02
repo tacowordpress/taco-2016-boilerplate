@@ -10,9 +10,9 @@ trait FormValidators {
 
   public static function checkEmail($value, $property_value=null) {
     if(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   public static function checkURL($value, $property_value=null) {

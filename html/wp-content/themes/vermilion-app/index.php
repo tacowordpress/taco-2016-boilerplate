@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 <style>.hide_label { display: none; }</style>
 <?php
-$form = new TacoForm(
+echo (new TacoForm(
   array(
     'conf_name' => 'RSVP test form',
     'hide_labels' => false,
@@ -9,15 +9,14 @@ $form = new TacoForm(
     'error_message' => 'not great!',
     'novalidate' => true,
     'fields' =>  array(
-      'first_name' => array('type' => 'text'),
+      'first_name' => array('type' => 'text', 'required' => true),
       'last_name' => array('type' => 'text'),
       'email_address' => array('type' => 'email', 'required' => true),
       'essay' => array('type' => 'textarea', 'maxlength' => 400),
       'subscribe' => array('type' => 'checkbox')
     )
   )
-);
-echo $form->render(); exit; ?>
+))->render(); exit; ?>
 ?>
 
 
