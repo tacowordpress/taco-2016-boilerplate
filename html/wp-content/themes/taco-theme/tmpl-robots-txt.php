@@ -1,11 +1,8 @@
 <?php
 
-$install_dir = __DIR__.'/../../../../wordpress';
-chdir($install_dir);
-include('wp-load.php');
+include getenv('HTTP_BOOTSTRAP_WP'); // bootstrap WordPress
 
-header('Content-type: text/plain');
-?>
+header('Content-type: text/plain'); ?>
 <?php if(ENVIRONMENT !== ENVIRONMENT_PROD): ?>
 User-agent: *
 Disallow: /
