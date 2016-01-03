@@ -4,7 +4,7 @@
 
 # ignore composer dir
 /vendor
-html/wp-content/themes/vermilion-app/taco-app/vendor/*
+html/wp-content/themes/taco-theme/app/vendor/*
 !html/.htaccess
 
 

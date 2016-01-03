@@ -13,30 +13,13 @@ echo (new TacoForm(
       'last_name' => array('type' => 'text'),
       'email_address' => array('type' => 'email', 'required' => true),
       'essay' => array('type' => 'textarea', 'maxlength' => 400),
+      'state' => array('type' => 'select' , 'options' => \AppLibrary\States::getAll()),
       'subscribe' => array('type' => 'checkbox')
     )
   )
 ))->render(); exit; ?>
 ?>
 
-
-<!-- old -->
-<?php $form = FormConfig::find(29); ?>
-<?php
-  echo $form->render(
-    array(
-      'css_class' => 'site-general-contact-form',
-      'id' => 'asfasf',
-      'method' => 'post',
-      'hide_labels' => true,
-      'column_classes' => 'small-12 columns medium-6 columns medium-centered',
-      'exclude_post_content' => false,
-      'field_requirements' => array(
-        'first_name' => array('required'),
-        'email' => array('required', 'email'),
-      )
-    )
-  ); ?>
 
 
   <?php

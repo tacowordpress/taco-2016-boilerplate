@@ -50,7 +50,8 @@ class TacoForm {
       'submit_button_text' => 'submit',
       'success_message' => null,
       'error_message' => null,
-      'success_redirect_url' => null
+      'success_redirect_url' => null,
+      'label_field_wrapper' => 'TacoForm::rowColumnWrap'
     );
 
     // we need this to uniquely identify the form conf that will get created or loaded
@@ -123,6 +124,18 @@ class TacoForm {
       $defaults,
       $this->settings
     );
+
+    // wrapper label/field method (is it the default, and is it a method or func?)
+    if(is_string($this->settings['label_field_wrapper'])) {
+      $wrapper_callable = explode(
+        '::', $this->settings['label_field_wrapper']
+      );
+      if(count($wrapper_method) > 1) {
+        $wrapper_callable = current($wrapper_callable);
+      }
+      $this->settings['label_field_wrapper'] = $wrapper_callable;
+    }
+    
     
     // assign post title to instance
     $this->conf_instance->set('post_title', $this->get('conf_name'));
@@ -233,7 +246,7 @@ class TacoForm {
 
     // wrap with row and columns (foundation)
     if(!$this->settings['exclude_post_content']) {
-      $html[] = self::rowColumnWrap(
+      $html[] = $this->settings['label_field_wrapper'](
         $this->conf_instance->getTheContent(),
         $this->settings['column_classes']
       );
@@ -249,7 +262,7 @@ class TacoForm {
       $messages['error_message'] = $this->get('error_message');
     }
 
-    $html[] = self::rowColumnWrap(
+    $html[] = $this->settings['label_field_wrapper'](
       $this->getFormMessages($messages),
       $this->settings['column_classes'].' form-messages'
     );
@@ -289,9 +302,10 @@ class TacoForm {
         : '';
 
       if(array_key_exists('type', $v) && $v['type'] === 'checkbox') {
-        $html[] = self::rowColumnWrap(
+        $html[] = $this->settings['label_field_wrapper'](
           $this->renderCheckBox($k, $v),
-          $error_columns_class
+          $error_columns_class,
+          $k
         );
         continue;
       }
@@ -308,11 +322,12 @@ class TacoForm {
         $v['placeholder'] = \AppLibrary\Str::human($k);
       }
       
-      $html[] = self::rowColumnWrap(
+      $html[] = $this->settings['label_field_wrapper'](
         self::renderFieldErrors($k)
         .' '.$label.' '
         .$this->conf_instance->getRenderPublicField($k, $v),
-        $error_columns_class
+        $error_columns_class,
+        $k
       );
     }
     return join('', $html);
@@ -372,15 +387,19 @@ class TacoForm {
    */
   public function renderFormFooter() {
     $html = [];
-    $html[] = self::rowColumnWrap(sprintf(
+    $html[] = $this->settings['label_field_wrapper'](sprintf(
       '<button type="submit">%s</button>',
       $this->get('submit_button_text')
     ));
-    $html[] = self::rowColumnWrap(
-      sprintf('<a href="/wp-admin/post.php?post=%d&action=edit">Edit</a>',
-        $this->conf_instance->ID
-      )
-    );
+
+    if(is_user_logged_in() && is_super_admin()) {
+      $html[] = $this->settings['label_field_wrapper'](
+        sprintf('<a href="/wp-admin/post.php?post=%d&action=edit">Edit this form\'s settings</a>',
+          $this->conf_instance->ID
+        )
+      );
+    }
+
     return join('', $html);
   }
 
@@ -413,7 +432,7 @@ class TacoForm {
    * @param $column_classes string of the classes that can be passed in
    * @return string html
    */
-  public static function rowColumnWrap($field, $column_classes='small-12 columns') {
+  public static function rowColumnWrap($field, $column_classes='small-12 columns', $field_key=null) {
     return sprintf(
       '<div class="row"><div class="%s">%s</div></div>',
       $column_classes,
