@@ -356,35 +356,6 @@ class TacoForm {
 
 
   /**
-   * get an an array of rendered fields
-   *  mainly to be used with a custom template
-   * @return array
-   */
-  public function getArryOfRenderedFields() {
-    $rendered_fields = [];
-    foreach($fields as $k => $v) {
-      $rendered_fields[$k] = $this->getRenderPublicField($k, $fields[$k]);
-      if($v['type'] == 'checkbox') {
-        $rendered_fields[$k.'_with_label'] = sprintf(
-          '<label for="%s">%s %s</label>',
-          array_key_exists('id', $v) ? $v['id']: $k,
-          $rendered_fields[$k],
-          \AppLibrary\Str::human($k)
-        );
-      } else {
-        $rendered_fields[$k.'_with_label'] = sprintf(
-          '<label for="%s">%s</label>%s',
-          array_key_exists('id', $v) ? $v['id']: $k,
-          \AppLibrary\Str::human($k),
-          $rendered_fields[$k]
-        );
-      }
-    }
-    return $rendered_fields;
-  }
-
-
-  /**
    * get a custom form rendering defined by the html callback
    * @param $callback callable
    * @return boolean
@@ -395,13 +366,14 @@ class TacoForm {
       $html[] = $this->renderFormHead();
       $rendered_fields = $this->renderFormFields(true);
       $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
+      
       // render the custom template
       FormTemplate::create(
         array($rendered_fields),
         $callback,
         null,
         $rendered_template, // by reference
-        $this
+        $this->conf_instance
       );
 
       $html[] = $rendered_template;

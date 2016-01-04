@@ -19,7 +19,8 @@ echo (new TacoForm(
       'subscribe' => array('type' => 'checkbox')
     )
   )
-))->render(function($form) { ?>
+))->render(function($form_config) { ?>
+
   <div class="row">
     <div class="small-8 columns">
       %post_content%
