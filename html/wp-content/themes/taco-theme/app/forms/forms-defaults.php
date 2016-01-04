@@ -1,5 +1,5 @@
 <?php
-/* This file allows defaults to be assigned globally for all Taco WordPress forms.
+/* This file allows defaults to be assigned globally for all TacoWordPress forms.
  * These defaults will be overridden if the developer specifies these values
  *   in the form config (hardcoded), or if the admin adds values in the wp-admin (if applicable).
  */

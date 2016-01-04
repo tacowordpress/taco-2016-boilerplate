@@ -136,7 +136,6 @@ class TacoForm {
       $this->settings['label_field_wrapper'] = $wrapper_callable;
     }
     
-    
     // assign post title to instance
     $this->conf_instance->set('post_title', $this->get('conf_name'));
     $this->conf_instance->set('fields', serialize($this->fields));
@@ -356,7 +355,7 @@ class TacoForm {
 
 
   /**
-   * get a custom form rendering defined by the html callback
+   * get a custom form rendering defined by an html callback
    * @param $callback callable
    * @return boolean
    */
