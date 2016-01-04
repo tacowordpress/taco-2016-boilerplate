@@ -365,7 +365,10 @@ class TacoForm {
       $html = [];
       $html[] = $this->renderFormHead();
       $rendered_fields = $this->renderFormFields(true);
+
+      // add other useful content
       $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
+      $rendered_fields['edit_link'] = $this->renderFormEditLink();
       
       // render the custom template
       FormTemplate::create(
@@ -422,16 +425,24 @@ class TacoForm {
       '<button type="submit">%s</button>',
       $this->get('submit_button_text')
     ));
+    $html[] = $this->renderFormEditLink();
+    return join('', $html);
+  }
 
+
+  /**
+   * renders the the form edit link
+   * @return string html
+   */
+  public function renderFormEditLink() {
     if(is_user_logged_in() && is_super_admin()) {
-      $html[] = $this->settings['label_field_wrapper'](
+      return $this->settings['label_field_wrapper'](
         sprintf('<a href="/wp-admin/post.php?post=%d&action=edit">Edit this form\'s settings</a>',
           $this->conf_instance->ID
         )
       );
     }
-
-    return join('', $html);
+    return '';
   }
 
 

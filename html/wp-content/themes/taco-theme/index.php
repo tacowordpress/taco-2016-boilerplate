@@ -19,7 +19,7 @@ echo (new TacoForm(
       'subscribe' => array('type' => 'checkbox')
     )
   )
-))->render(function($form_config) { ?>
+))->render(function($conf) { ?>
 
   <div class="row">
     <div class="small-8 columns">
@@ -52,8 +52,7 @@ echo (new TacoForm(
   </div>
 
   <div class="row">
-    <div class="small-8 co
-    lumns">
+    <div class="small-8 columns">
       %subscribe%
     </div>
   </div>
@@ -63,8 +62,13 @@ echo (new TacoForm(
      <button type="submit">Submit</button>
     </div>
   </div>
-<?php }); ?>
 
+  <div class="row">
+    <div class="small-8 columns">
+      %edit_link%
+    </div>
+  </div>
+<?php }); ?>
 
 
 <?php get_footer(); ?>
