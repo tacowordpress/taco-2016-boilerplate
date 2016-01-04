@@ -9,6 +9,7 @@ echo (new TacoForm(
     'success_message' => 'great!',
     'error_message' => 'not great!',
     'novalidate' => true,
+    'exclude_post_content' => true,
     'fields' =>  array(
       'first_name' => array('type' => 'text', 'required' => true),
       'last_name' => array('type' => 'text'),
@@ -21,19 +22,19 @@ echo (new TacoForm(
 ))->render(function($form) { ?>
   <div class="row">
     <div class="small-8 columns">
-      <?php echo $form->getTheContent(); ?>
+      %post_content%
     </div>
   </div>
 
   <div class="row">
     <div class="small-8 columns">
-      %first_name_with_label%
+      %first_name%
     </div>
   </div>
 
   <div class="row">
     <div class="small-8 columns">
-      %last_name_with_label%
+      %last_name%
     </div>
   </div>
 
@@ -50,8 +51,9 @@ echo (new TacoForm(
   </div>
 
   <div class="row">
-    <div class="small-8 columns">
-      %subscribe_with_label%
+    <div class="small-8 co
+    lumns">
+      %subscribe%
     </div>
   </div>
 

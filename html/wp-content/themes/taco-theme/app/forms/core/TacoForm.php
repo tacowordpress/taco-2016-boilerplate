@@ -203,7 +203,10 @@ class TacoForm {
    * renders the form head
    * @return string html
    */
-  public function render() {
+  public function render($callback=null) {
+    if($callback !== null && is_callable($callback)) {
+      return $this->renderCustom($callback);
+    }
     $html = [];
     $html[] = $this->renderFormHead();
     $html[] = $this->renderFormFields();
@@ -274,7 +277,7 @@ class TacoForm {
    * renders the form fields
    * @return string html
    */
-  public function renderFormFields() {
+  public function renderFormFields($return_as_array=false) {
     
     $html = [];
     foreach($this->fields as $k => $v) {
@@ -302,7 +305,7 @@ class TacoForm {
         : '';
 
       if(array_key_exists('type', $v) && $v['type'] === 'checkbox') {
-        $html[] = $this->settings['label_field_wrapper'](
+        $html[$k] = $this->settings['label_field_wrapper'](
           $this->renderCheckBox($k, $v),
           $error_columns_class,
           $k
@@ -322,7 +325,7 @@ class TacoForm {
         $v['placeholder'] = \AppLibrary\Str::human($k);
       }
       
-      $html[] = $this->settings['label_field_wrapper'](
+      $html[$k] = $this->settings['label_field_wrapper'](
         self::renderFieldErrors($k)
         .' '.$label.' '
         .$this->conf_instance->getRenderPublicField($k, $v),
@@ -330,7 +333,9 @@ class TacoForm {
         $k
       );
     }
-    return join('', $html);
+    return (!$return_as_array)
+      ? join('', $html)
+      : $html;
   }
 
 
@@ -347,6 +352,60 @@ class TacoForm {
       );
     }
     return '';
+  }
+
+
+  /**
+   * get an an array of rendered fields
+   *  mainly to be used with a custom template
+   * @return array
+   */
+  public function getArryOfRenderedFields() {
+    $rendered_fields = [];
+    foreach($fields as $k => $v) {
+      $rendered_fields[$k] = $this->getRenderPublicField($k, $fields[$k]);
+      if($v['type'] == 'checkbox') {
+        $rendered_fields[$k.'_with_label'] = sprintf(
+          '<label for="%s">%s %s</label>',
+          array_key_exists('id', $v) ? $v['id']: $k,
+          $rendered_fields[$k],
+          \AppLibrary\Str::human($k)
+        );
+      } else {
+        $rendered_fields[$k.'_with_label'] = sprintf(
+          '<label for="%s">%s</label>%s',
+          array_key_exists('id', $v) ? $v['id']: $k,
+          \AppLibrary\Str::human($k),
+          $rendered_fields[$k]
+        );
+      }
+    }
+    return $rendered_fields;
+  }
+
+
+  /**
+   * get a custom form rendering defined by the html callback
+   * @param $callback callable
+   * @return boolean
+   */
+  private function renderCustom($callback) {
+    
+      $html = [];
+      $html[] = $this->renderFormHead();
+      $rendered_fields = $this->renderFormFields(true);
+      $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
+      // render the custom template
+      FormTemplate::create(
+        array($rendered_fields),
+        $callback,
+        null,
+        $rendered_template, // by reference
+        $this
+      );
+
+      $html[] = $rendered_template;
+      return join('', $html);
   }
 
 
