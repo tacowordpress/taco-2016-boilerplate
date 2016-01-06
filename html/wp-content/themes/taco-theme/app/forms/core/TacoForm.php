@@ -237,6 +237,7 @@ class TacoForm {
         $part_args = [];
       }
 
+      if(in_array($key, array('form_messages','post_content', 'edit_link'))) continue;
       if(in_array($key, array('post_content', 'edit_link'))) continue;
       $fields_raw[$key] = $arg_key_values;
       if(isset($key) && !array_key_exists('type', $fields_raw[$key])) {
@@ -306,7 +307,7 @@ class TacoForm {
    * renders the form head
    * @return string html
    */
-  public function renderFormHead($exlude_post_content=false) {
+  public function renderFormHead($using_custom=false) {
 
     // start the form html using an array
     $html = [];
@@ -335,7 +336,7 @@ class TacoForm {
     }
 
     // wrap with row and columns (foundation)
-    if(!$this->settings['exclude_post_content'] && !$exlude_post_content) {
+    if(!$this->settings['exclude_post_content'] && !$using_custom) {
       $html[] = $this->settings['label_field_wrapper'](
         $this->conf_instance->getTheContent(),
         $this->settings['column_classes']
@@ -343,6 +344,19 @@ class TacoForm {
     }
 
     //get form messages
+    if(!$using_custom) {
+      $html[] = $this->settings['label_field_wrapper'](
+        $this->getFormMessages($messages),
+        $this->settings['column_classes'].' form-messages'
+      );
+      $this->renderMessages();
+    }
+    
+    return join('', $html);
+  }
+
+
+  public function renderMessages() {
     $messages = [];
     // check for success and error message overrides
     if(strlen($this->get('success_message'))) {
@@ -351,12 +365,7 @@ class TacoForm {
     if(strlen($this->get('error_message'))) {
       $messages['error_message'] = $this->get('error_message');
     }
-
-    $html[] = $this->settings['label_field_wrapper'](
-      $this->getFormMessages($messages),
-      $this->settings['column_classes'].' form-messages'
-    );
-    return join('', $html);
+    return $this->getFormMessages($messages);
   }
 
 
@@ -456,6 +465,7 @@ class TacoForm {
     // add other useful content
     $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
     $rendered_fields['edit_link'] = $this->renderFormEditLink();
+    $rendered_fields['form_messages'] = $this->renderMessages();
     
     // render the custom template
     FormTemplate::create(
