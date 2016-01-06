@@ -449,24 +449,24 @@ class TacoForm {
    */
   private function renderCustom($callback) {
     
-      $html = [];
-      $html[] = $this->renderFormHead(true);
-      $rendered_fields = $this->renderFormFields(true);
+    $html = [];
+    $html[] = $this->renderFormHead(true);
+    $rendered_fields = $this->renderFormFields(true);
 
-      // add other useful content
-      $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
-      $rendered_fields['edit_link'] = $this->renderFormEditLink();
-      
-      // render the custom template
-      FormTemplate::create(
-        array($rendered_fields),
-        $callback,
-        $rendered_template, // by reference
-        $this->conf_instance
-      );
+    // add other useful content
+    $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
+    $rendered_fields['edit_link'] = $this->renderFormEditLink();
+    
+    // render the custom template
+    FormTemplate::create(
+      array($rendered_fields),
+      $callback,
+      $rendered_template, // by reference
+      $this->conf_instance
+    );
 
-      $html[] = $rendered_template;
-      return join('', $html);
+    $html[] = $rendered_template;
+    return join('', $html);
   }
 
 
