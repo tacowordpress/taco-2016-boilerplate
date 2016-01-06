@@ -1,65 +1,46 @@
 <?php get_header(); ?>
 <style>.hide_label { display: none; }</style>
 
-<?php
-echo (new TacoForm(
-  array(
-    'conf_name' => 'RSVP test form',
-    'hide_labels' => false,
-    'success_message' => 'great!',
-    'error_message' => 'not great!',
-    'novalidate' => true,
-    'exclude_post_content' => true,
-    'fields' =>  array(
-      'first_name' => array('type' => 'text', 'required' => true),
-      'last_name' => array('type' => 'text'),
-      'email_address' => array('type' => 'email', 'required' => true),
-      'essay' => array('type' => 'textarea', 'maxlength' => 400),
-      'state' => array('type' => 'select' , 'options' => \AppLibrary\States::getAll()),
-      'subscribe' => array('type' => 'checkbox')
-    )
-  )
-))->render(function($conf) { ?>
 
+<?php $contact_form = new TacoForm(
+  array(
+    'conf_name' => 'test_form_conf',
+    'novalidate' => true,
+    'hide_labels' => true,
+    'fields' => 'auto'
+  )
+);
+
+echo $contact_form->render(function($form_conf) { ?>
   <div class="row">
     <div class="small-8 columns">
       %post_content%
     </div>
   </div>
-
   <div class="row">
     <div class="small-8 columns">
-      %first_name%
+      %first_name|required=true%
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-8 columns">
+      %last_name|required=true%
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-8 columns">
+      %email|required=true%
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-8 columns">
+      %bio|maxlength=100%
     </div>
   </div>
 
   <div class="row">
     <div class="small-8 columns">
-      %last_name%
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-8 columns">
-      %email_address%
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-8 columns">
-      %essay%
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-8 columns">
-      %subscribe%
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="small-8 columns">
-     <button type="submit">Submit</button>
+      <button type="submit">submit</button>
     </div>
   </div>
 
@@ -68,7 +49,6 @@ echo (new TacoForm(
       %edit_link%
     </div>
   </div>
-<?php }); ?>
-
+<?php }); exit; ?>
 
 <?php get_footer(); ?>

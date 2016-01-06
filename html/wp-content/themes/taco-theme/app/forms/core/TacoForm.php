@@ -80,7 +80,7 @@ class TacoForm {
 
     // assign only the fields specified above and in the form conf
     foreach($args as $k => $v) {
-      if($k === 'fields') {
+      if($k === 'fields' && $args['fields'] !== 'auto') {
         $this->fields = $v;
         continue;
       }
@@ -138,7 +138,10 @@ class TacoForm {
     
     // assign post title to instance
     $this->conf_instance->set('post_title', $this->get('conf_name'));
-    $this->conf_instance->set('fields', serialize($this->fields));
+    
+    if($this->settings['fields'] !== 'auto') {
+      $this->conf_instance->set('fields', serialize($this->fields));
+    }
 
     // assign conf machine name
     $this->conf_machine_name = \AppLibrary\Str::machine($this->get('conf_name'), '-');
@@ -199,10 +202,95 @@ class TacoForm {
 
 
   /**
+   * automatically generate a fields/attribs from template tags
+   * @param $callback callable
+   * @return callable
+   */
+  public function getFieldsAutomatically($callback) {
+    if(!($callback !== null && is_callable($callback))) {
+      throw new Exception('$callback must be a valid callback');
+    }
+    
+    $html_template = null;
+   
+    ob_start();
+      $callback($this->conf_instance);
+    $html_template = ob_get_clean();
+
+    preg_match_all('/\%(.*)\%/', $html_template, $parts);
+    $parts = $parts[1];
+
+    $fields_raw = [];
+
+    foreach($parts as $part) {
+      $arg_key_values = [];
+      if(preg_match('/\|/', $part)) {
+        $part_args = explode('|', $part);
+        $key = current($part_args);
+        $part_args = array_slice($part_args, 1);
+        foreach($part_args as $arg) {
+          $keyvalues = explode('=', $arg);
+          $arg_key_values[current($keyvalues)] = end($keyvalues);
+        }
+      } else {
+        $key = $part;
+        $part_args = [];
+      }
+
+      if(in_array($key, array('post_content', 'edit_link'))) continue;
+      $fields_raw[$key] = $arg_key_values;
+      if(isset($key) && !array_key_exists('type', $fields_raw[$key])) {
+        $fields_raw[$key]['type'] = 'text';
+      }
+    }
+    $this->fields = $fields_raw;
+    $this->conf_instance->set('fields', serialize($fields_raw));
+    $this->conf_instance->save();
+    
+    return $this->convertToPropperTemplate(
+      $html_template
+    );
+  }
+
+
+  /**
+   * convert an html template that has fields with args to just fields keys
+   * @param $html_template string
+   * @return callable
+   */
+  public function convertToPropperTemplate($html_template) {
+
+    preg_match_all('/\%(.*)%/', $html_template, $originals);
+    preg_match_all('/\%([a-z_]*)/m', $html_template, $replacements);
+    $replacements = array_values(
+      array_filter($replacements[1])
+    );
+    $originals = $originals[0];
+    
+    $new_html = $html_template;
+    $inc = 0;
+    foreach($originals as $o) {
+      $new_html = str_replace(
+        $o,
+        '%'.$replacements[$inc].'%',
+        $new_html
+      );
+      $inc++;
+    }
+    return function() use ($new_html) {
+      echo $new_html;
+    };
+  }
+
+
+  /**
    * renders the form head
    * @return string html
    */
   public function render($callback=null) {
+    if($this->get('fields') == 'auto') {
+      $callback = $this->getFieldsAutomatically($callback);
+    }
     if($callback !== null && is_callable($callback)) {
       return $this->renderCustom($callback);
     }
@@ -218,7 +306,7 @@ class TacoForm {
    * renders the form head
    * @return string html
    */
-  public function renderFormHead() {
+  public function renderFormHead($exlude_post_content=false) {
 
     // start the form html using an array
     $html = [];
@@ -247,7 +335,7 @@ class TacoForm {
     }
 
     // wrap with row and columns (foundation)
-    if(!$this->settings['exclude_post_content']) {
+    if(!$this->settings['exclude_post_content'] && !$exlude_post_content) {
       $html[] = $this->settings['label_field_wrapper'](
         $this->conf_instance->getTheContent(),
         $this->settings['column_classes']
@@ -362,7 +450,7 @@ class TacoForm {
   private function renderCustom($callback) {
     
       $html = [];
-      $html[] = $this->renderFormHead();
+      $html[] = $this->renderFormHead(true);
       $rendered_fields = $this->renderFormFields(true);
 
       // add other useful content
@@ -373,7 +461,6 @@ class TacoForm {
       FormTemplate::create(
         array($rendered_fields),
         $callback,
-        null,
         $rendered_template, // by reference
         $this->conf_instance
       );
