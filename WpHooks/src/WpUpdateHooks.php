@@ -6,7 +6,7 @@ class WpUpdateHooks
 {
     public static function updateWpConfig(Event $event)
     {
-        if(file_exists(__DIR__.'/../../html/wp-config.php')) return;
+        if (file_exists(__DIR__.'/../../html/wp-config.php')) return;
         $handle = fopen(__DIR__.'/../../html/wp-config.php', 'w');
         fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
         fclose($handle);
@@ -32,6 +32,12 @@ class WpUpdateHooks
     public static function installComposerInTheme()
     {
         $composer_path = `which composer.phar`;
+        if (!preg_match('/composer/', $composer_path)) {
+            echo "\r\n";
+            echo "This script seems to be having trouble finding your composer.phar \r\n";
+            echo "Please cd into the taco-theme/app directory and manually run \"composer install\" \r\n";
+            echo "\r\n";
+        }
         $composer_path = preg_replace('/(\s+)/', '', $composer_path);
         $c = [];
         $c[] = "cd ".__DIR__."/../../html/wp-content/themes/taco-theme/app/ \r\n";
@@ -44,12 +50,14 @@ class WpUpdateHooks
     {
         echo "\r\n";
         echo "\r\n";
+        echo "\r\n";
         echo "Please edit \"wp-config.php\" in the non public root by: \r\n";
         echo " • changing the database prefix \r\n";
         echo " • adding salts \r\n";
         echo " • adding your database info \r\n";
         echo "Remember: \"wp-config.php\" will not be added to your repository.\r\n";
         echo 'Keep your database info somewhere for safe keeping!';
+        echo "\r\n";
         echo "\r\n";
     }
 
