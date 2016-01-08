@@ -13,7 +13,7 @@ require_once __DIR__.'/core/Psr4AutoloaderClass.php';
 $loader = new Psr4AutoloaderClass;
 $loader->register();
 
-// assign namspaces and their corresponding autoload paths here
+// assign namespaces and their corresponding autoload paths here
 $loader->addNamespace('\AppLibrary\\', __DIR__.'/lib/AppLibrary/src');
 
 // Initialize Taco
