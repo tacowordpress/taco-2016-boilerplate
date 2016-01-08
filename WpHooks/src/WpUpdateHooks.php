@@ -29,6 +29,31 @@ class WpUpdateHooks
 
     }
 
+    public static function installComposerInTheme()
+    {
+        $composer_path = `which composer.phar`;
+        $composer_path = preg_replace('/(\s+)/', '', $composer_path);
+        $c = [];
+        $c[] = "cd ".__DIR__."/../../html/wp-content/themes/taco-theme/app/ \r\n";
+        $c[] = "php ".$composer_path. " install";
+        exec(join('',$c));
+    }
+
+
+    public static function printRemainingInstructions()
+    {
+        echo "\r\n";
+        echo "\r\n";
+        echo "Please edit \"wp-config.php\" in the non public root by: \r\n";
+        echo " • changing the database prefix \r\n";
+        echo " • adding salts \r\n";
+        echo " • adding your database info \r\n";
+        echo "Remember: \"wp-config.php\" will not be added to your repository.\r\n";
+        echo 'Keep your database info somewhere for safe keeping!';
+        echo "\r\n";
+    }
+
+
     public static function recursiveCopy($src, $dst)
     {
         $dir = opendir($src);

@@ -10,7 +10,9 @@
       "WpHooks\\WpUpdateHooks::updateWpConfig"
     ],
     "post-install-cmd": [
-      "WpHooks\\WpUpdateHooks::updateWpConfig"
+      "WpHooks\\WpUpdateHooks::updateWpConfig",
+      "WpHooks\\WpUpdateHooks::installComposerInTheme",
+      "WpHooks\\WpUpdateHooks::printRemainingInstructions"
     ]
   },
   "autoload": {
