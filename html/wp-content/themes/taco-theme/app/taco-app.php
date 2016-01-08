@@ -1,15 +1,15 @@
 <?php
 
 // autoload vendor files (composer backend)
-require_once realpath(__DIR__.'/vendor/autoload.php');
+require_once realpath(__DIR__.'/core/vendor/autoload.php');
 
 // load frontend files from composer dir
-require_once __DIR__.'/CustomLoader.php';
+require_once __DIR__.'/core/CustomLoader.php';
 \TacoApp\CustomLoader::init();
 
 // let's autoload some files
 // load the psr-4 autoloader class file
-require_once __DIR__.'/Psr4AutoloaderClass.php';
+require_once __DIR__.'/core/Psr4AutoloaderClass.php';
 $loader = new Psr4AutoloaderClass;
 $loader->register();
 

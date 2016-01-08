@@ -40,7 +40,7 @@ class WpUpdateHooks
         }
         $composer_path = preg_replace('/(\s+)/', '', $composer_path);
         $c = [];
-        $c[] = "cd ".__DIR__."/../../html/wp-content/themes/taco-theme/app/ \r\n";
+        $c[] = "cd ".__DIR__."/../../html/wp-content/themes/taco-theme/app/core/ \r\n";
         $c[] = "php ".$composer_path. " install";
         exec(join('',$c));
     }

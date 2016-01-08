@@ -14,5 +14,5 @@ class Num extends \AppLibrary\Num {}
 class Str extends \AppLibrary\Str {}
 class States extends \AppLibrary\States {}
 
-require_once dirname(__FILE__).'/app/functions-generic.php';
-require_once dirname(__FILE__).'/app/functions-app.php';
+require_once dirname(__FILE__).'/theme-functions/functions-generic.php';
+require_once dirname(__FILE__).'/theme-functions/functions-app.php';
