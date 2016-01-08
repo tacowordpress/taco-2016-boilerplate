@@ -55,7 +55,8 @@ class WpUpdateHooks
         echo " • changing the database prefix \r\n";
         echo " • adding salts \r\n";
         echo " • adding your database info \r\n";
-        echo "Remember: \"wp-config.php\" will not be added to your repository.\r\n";
+        echo "Remember: \"wp-config.php\" should not be part of the project's repository\r\n";
+        echo " and should be added to your \".gitignore\" file.\r\n";
         echo 'Keep your database info somewhere for safe keeping!';
         echo "\r\n";
         echo "\r\n";
