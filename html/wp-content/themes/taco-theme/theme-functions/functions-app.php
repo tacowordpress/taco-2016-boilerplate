@@ -206,3 +206,8 @@ function add_non_vermilion_admin_menu_items() {
    add_menu_page( 'Menus', 'Menus', 'manage_options', 'nav-menus.php', '', null, 6);
   }
 }
+
+// make the search engines discouraged text more visible
+add_action('admin_print_styles', function() {
+  echo '<style>a[href*="options-reading.php"] { padding: 2px; background-color: red; color: white; };</style>';
+});
