@@ -6,11 +6,23 @@ include __DIR__.'/loader.php';
 
 if(ENVIRONMENT != 'dev') exit;
 
+// the number of posts to create
 $n = $_GET['number'];
+
+// the post type must be associated with a Taco class
+// e.g. class Post extends \Taco\Post {...
 $post_type = $_GET['post_type'];
 
 
-$taxonomies = $post_type::getTaxonomies();
+
+
+// initialize a helper class of the post type so we can get the fields
+$helper = new $post_type;
+
+// find taxonomies and terms based on the post ype
+$taxonomies = (method_exists($post_type, 'getTaxonomies'))
+  ? $helper->getTaxonomies()
+  : array();
 
 if(\AppLibrary\Arr::iterable($taxonomies)) {
   $taxonomies_terms = Taquito::arrayManipulate(function($k, $tax_name) {
@@ -22,17 +34,24 @@ if(\AppLibrary\Arr::iterable($taxonomies)) {
   }, $taxonomies);
 }
 
-$helper = new $post_type;
 $fields = $helper->getFields();
+
+if(!array_key_exists('created_for_testing', $fields)) {
+  echo '<b>Error:</b> A field named "created_for_testing"'
+  .'must be added to the getFields method for this post type\'s class.';
+  exit;
+}
 unset($helper);
 
+// based on the number in $_GET, create and iterate
 for($i = 0; $i < $n; $i++) {
   $faker = Faker\Factory::create();
 
   $faker->addProvider(new Faker\Provider\Resource($faker));
 
   $instance = new $post_type;
- 
+
+  // assign random terms
   if(\AppLibrary\Arr::iterable($taxonomies)) {
     foreach($taxonomies_terms as $tax_name => $terms) {
       if(preg_match('/type/', $tax_name)) {
@@ -54,6 +73,7 @@ for($i = 0; $i < $n; $i++) {
 
   $bool_for_checkbox = array(null, '1');
 
+  // assign values to fields
   foreach($fields as $k => $v) {
   
     if(!array_key_exists('type', $v)) continue;
@@ -99,7 +119,13 @@ for($i = 0; $i < $n; $i++) {
 
   if(preg_match('/resource|research/', $post_type)) {
     $title = $faker->resourceTitle;
+  } else {
+    $title = $faker->sentence;
   }
+
   $instance->set('post_title', $title);
   $id = $instance->save();
+  echo sprintf('created "%s" post type [id: %d]', $post_type, $id)."<br>";
 }
+echo '<b>success</b>';
+exit;
