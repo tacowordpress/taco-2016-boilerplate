@@ -18,8 +18,11 @@ $contact_form_config = new TacoForm(
 
 echo $contact_form_config->render();
 ```
-### So What's happening here?
+#### So What's happening here?
 * First we create a new TacoForm object
 * Then we pass in array of settings
 * Define some fields to be used in the form
 * Lastly, render the form with the object's render method.
+
+All of that gives you a form in the frontned that visitors can fill out, and be recorded as an entry post type in WordPress. It also gives the admin access to overriding common settings like admin emails (for notifications), success, and error messages.
+
