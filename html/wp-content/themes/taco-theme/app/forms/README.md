@@ -1,1 +1,20 @@
-# Taco Forms
+# TacoForms
+
+The objective of TacoForms in tangent with this boilerplate, it to literally allow you to make a form in less than 2 minutes. It's API that taps into TacoWordPress to create Form configuration post types that allow both you the developer as well as the client admin to setup.
+
+## A Basic example
+```php
+<?php
+$contact_form_config = new TacoForm(
+  array(
+    'conf_name' => 'General Contact Form Configurations',
+    'fields' => array(
+      'first_name' => array('type' => 'text'),
+      'email' => array('type' => 'email'),
+      'message' => array('type' => 'textarea')
+    )
+  )
+);
+
+echo $contact_form_config->render();
+```
