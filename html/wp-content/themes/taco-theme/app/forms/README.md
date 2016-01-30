@@ -26,7 +26,7 @@ echo $contact_form_config->render();
 
 All of that gives you a form in the frontend that visitors can fill out, and be recorded as an entry post type in WordPress. It also gives the admin access to overriding common settings like admin emails (for notifications), success, and error messages.
 
-#### TacoForm API form configuration settings
+#### TacoForm API configuration settings
 
 These are the properties and values (defaults show below) that can be used to setup a form configuration.
 
