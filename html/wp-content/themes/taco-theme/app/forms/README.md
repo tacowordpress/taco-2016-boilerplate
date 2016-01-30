@@ -18,7 +18,7 @@ $contact_form_config = new TacoForm(
 
 echo $contact_form_config->render();
 ```
-#### So What's happening here?
+#### So what's happening here?
 * First we create a new TacoForm object
 * Then we pass in array of settings
 * Define some fields to be used in the form
