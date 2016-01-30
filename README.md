@@ -1,6 +1,6 @@
 # 2016 Boilerplate Documentation
 
-This boilerplate does not include WordPress. Instead it uses composer to install the latest version of WordPress and the dependencies in the the taco-theme folder. The intention is to keep WordPress out of project repositories so it can autoupdated independently of the wp-content directory.
+This boilerplate does not include WordPress. Instead it uses composer to install the latest version of WordPress and the dependencies in the the taco-theme folder. The intention is to keep WordPress out of project repositories so it can auto updated independently of the wp-content directory.
 
 ### Installation
 Run "composer install" from the html folder's parent. If successful, WordPress will be installed in the "html" directory without affecting the "wp-content" folder. A post install script will also be ran to install vendor files in the taco-theme/app/core. These files are vital for the theme to function properly.
