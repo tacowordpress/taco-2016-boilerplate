@@ -1,6 +1,6 @@
 # TacoForms
 
-The objective of TacoForms in tangent with this boilerplate, it to literally allow you to make a form in less than 2 minutes. It's API that taps into TacoWordPress to create Form configuration post types that allow both you the developer as well as the client admin to setup.
+The objective of TacoForms in tangent with this boilerplate, it to literally allow you to make a form in less than 2 minutes. It's an API that taps into TacoWordPress to create Form configuration post types that allow both you the developer as well as the client admin to setup.
 
 ## A Basic example
 ```php
