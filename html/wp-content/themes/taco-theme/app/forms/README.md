@@ -83,6 +83,7 @@ echo (new TacoForm(
 <?php }); ?>
 ```
 Example 1 shows how easy it is to use your own template using HTML and template tags. 
+Using %my_field_name% will render that field according to the configuration settings. Let's say you wanted to hide the labels for fields and use placeholders instead. In your config settings just set `"hide_labels" => true`.
 More to come...
 
 
