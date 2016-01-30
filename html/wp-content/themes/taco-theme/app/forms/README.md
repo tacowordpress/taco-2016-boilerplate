@@ -28,7 +28,7 @@ All of that gives you a form in the frontend that visitors can fill out, and be 
 
 #### TacoForm API configuration settings
 
-These are the properties and values (defaults show below) that can be used to setup a form configuration.
+These are the properties and values (defaults shown below) that can be used to setup a form configuration.
 
 ```php
 
