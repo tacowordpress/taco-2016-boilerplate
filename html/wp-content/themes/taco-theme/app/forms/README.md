@@ -51,6 +51,29 @@ These are the properties and values (defaults show below) that can be used to se
       'label_field_wrapper' => 'TacoForm::rowColumnWrap'
     );
 ```
+Details on what each property/value does is coming soon.
+
+## Customizing how the form gets rendered
+The simplicity of TacoForms doesn't stop with the above. Custom rendering of a form is also a breeze and comes with a few different options.
+
+##### Example 1 
+```php
+<?php echo (new TacoForm(
+  array(
+    'conf_name' => 'General Contact Form Configuration',
+    'novalidate' => true,
+    'fields' => array('first_name' => array()),
+  )
+))->render(function($form_conf) { ?>
+  %first_name%
+  <div class="row">
+    <div class="small-12 columns">
+      %edit_link%
+    </div>
+  </div>
+<?php }); ?>
+```
+
 
 
 
