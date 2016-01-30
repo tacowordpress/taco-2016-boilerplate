@@ -82,7 +82,7 @@ echo (new TacoForm(
   
 <?php }); ?>
 ```
-Example 1 shows how easy it is to use your own template using HTML and template tags. 
+Example 1 shows how easy it is to use your own template with HTML and template tags. 
 Using %my_field_name% will render that field according to the configuration settings. Let's say you wanted to hide the labels for fields and use placeholders instead. In your config settings just set `"hide_labels" => true`.
 You will notice "%edit_link%" in the example above. This renders a link to the WordPress admin, where client admin can go to the configuration to edit fields like success/error messages and admin emails.
 
