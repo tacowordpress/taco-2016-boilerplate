@@ -7,7 +7,7 @@ The objective of TacoForms in tangent with this boilerplate, it to literally all
 <?php
 $contact_form_config = new TacoForm(
   array(
-    'conf_name' => 'General Contact Form Configurations',
+    'conf_name' => 'General Contact Form Configuration',
     'fields' => array(
       'first_name' => array('type' => 'text'),
       'email' => array('type' => 'email'),
