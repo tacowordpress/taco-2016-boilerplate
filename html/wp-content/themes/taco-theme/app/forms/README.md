@@ -64,13 +64,35 @@ echo (new TacoForm(
   array(
     'conf_name' => 'General Contact Form Configuration',
     'novalidate' => true,
-    'fields' => array('first_name' => array()),
+    'fields' => array(
+      'first_name' => array(),
+      'email' => array('type' => 'email'),
+      'message' => array('type' => 'textarea')
+    ),
   )
 ))->render(function($form_conf) { ?>
   
   <div class="row">
     <div class="small-12 columns">
       %first_name%
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      %email%
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      %message%
+    </div>
+  </div>
+  
+   <div class="row">
+    <div class="small-12 columns">
+      <button type="submit">Submit</button>
     </div>
   </div>
 
@@ -85,6 +107,68 @@ echo (new TacoForm(
 Example 1 shows how easy it is to use your own template with HTML and template tags. 
 Using %my_field_name% will render that field according to the configuration settings. Let's say you wanted to hide the labels for fields and use placeholders instead. In your config settings just set `"hide_labels" => true`.
 You will notice "%edit_link%" in the example above. This renders a link to the WordPress admin, where client admin can go to the configuration to edit fields like success/error messages and admin emails.
+
+##### Example 2 changing form messages
+
+```php
+<?php 
+
+echo (new TacoForm(
+  array(
+    'conf_name' => 'General Contact Form Configuration',
+    'novalidate' => true,
+    'success_message' => 'Success! Thanks for your inquiry.',
+    'error_message' => 'Oops! Looks like there was an error in the form. Please correct and try again.'
+    'fields' => array(
+      'first_name' => array(),
+      'last_name' => array(),
+      'email' => array('type' => 'email'),
+      'message' => array('type' => 'textarea')
+    ),
+    
+  )
+))->render(function($form_conf) { ?>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      %form_messages% // <- This is where success or error messages will print
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      %first_name%
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      %last_name%
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      %email%
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      %message%
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns">
+      <button type="submit">Submit</button>
+    </div>
+  </div>
+  
+  
+<?php }); ?>
+```
+
 
 More to come...
 
