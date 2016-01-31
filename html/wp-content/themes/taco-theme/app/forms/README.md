@@ -133,7 +133,7 @@ echo (new TacoForm(
   
   <div class="row">
     <div class="small-12 columns">
-      %form_messages% // <- This is where success or error messages will print
+      %form_messages% //This is where success or error messages will print
     </div>
   </div>
   
