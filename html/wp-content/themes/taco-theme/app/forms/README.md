@@ -110,7 +110,7 @@ You will notice "%edit_link%" in the example above. This renders a link to the W
 
 ##### Example 2 changing form messages
 
-The below example demonstrates a few things: customizing the form's general success/error messages and the position of these them. Note: The WordPress admin can override these fields and that's done by design.
+The below example demonstrates a few things: customizing the form's general success/error messages and the position of them. Note: The WordPress admin can override these fields and that's done by design.
 
 ```php
 <?php 
