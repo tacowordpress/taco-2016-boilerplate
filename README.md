@@ -10,5 +10,5 @@ The contents of wp-config.php in the html directory will be replaced with "<?php
 After the above is setup, you can access [yoursite.dev]/wp-admin as normal to continue with the WordPress installation.
 
 ##### Other Important Documentation
-[TacoForms](See my [About](/about/) page for details. ) – An API for quick form creation
+[TacoForms](https://github.com/tacowordpress/taco-2016-boilerplate/blob/master/html/wp-content/themes/taco-theme/app/forms/README.md) – An API for quick form creation
 
