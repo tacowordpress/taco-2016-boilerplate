@@ -171,6 +171,10 @@ echo (new TacoForm(
 <?php }); ?>
 ```
 
+##### Why is the template syntax atypical?
+You will notice how you close php to start defining your custom template. If you've been using php for a bit you might have guessed that I'm using output buffering to capture the html and replace %template_tags% with rendered html. This happens behind the scenes. In my very humble opinion, if you get passed the weirdness, it's a very elegant way to customize.
+
+##### If you can get passed the weirdness you will really like this! 
 
 More to come...
 
