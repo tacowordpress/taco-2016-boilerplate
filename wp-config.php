@@ -96,6 +96,8 @@ $table_prefix  = 'sitename_wp_';
  */
 define('WP_DEBUG', false);
 
+define('WP_AUTO_UPDATE_CORE', true);
+
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */
