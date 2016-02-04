@@ -12,7 +12,6 @@ class WpUpdateHooks
         fclose($handle);
         self::deleteTree(__DIR__.'/../../wordpress-temp/wp-content');
         self::recursiveCopy(__DIR__.'/../../wordpress-temp', __DIR__.'/../../html');
-        self::deleteTree(__DIR__.'/../../wordpress-temp');
        
         if (file_exists(__DIR__.'/../../html/composer.json')) {
             unlink(__DIR__.'/../../html/composer.json');
@@ -46,6 +45,8 @@ class WpUpdateHooks
         $c[] = "cd ".__DIR__."/../../html/wp-content/themes/taco-theme/app/core/ \r\n";
         $c[] = "php ".$composer_path. " install";
         exec(join('',$c));
+
+        self::deleteTree(__DIR__.'/../../wordpress-temp');
     }
 
 
