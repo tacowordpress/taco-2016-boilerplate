@@ -1,9 +1,9 @@
 <?php
 
-require_once dirname(__FILE__).'/app/config.php';
+require_once __DIR__.'/app/config.php';
 
 // load core app files through app.php
-require_once dirname(__FILE__).'/app/taco-app.php';
+require_once __DIR__.'/app/taco-app.php';
 
 // assign aliases for common util classes
 class Arr extends \AppLibrary\Arr {}
@@ -14,5 +14,5 @@ class Num extends \AppLibrary\Num {}
 class Str extends \AppLibrary\Str {}
 class States extends \AppLibrary\States {}
 
-require_once dirname(__FILE__).'/theme-functions/functions-generic.php';
-require_once dirname(__FILE__).'/theme-functions/functions-app.php';
+require_once __DIR__.'/theme-functions/functions-generic.php';
+require_once __DIR__.'/theme-functions/functions-app.php';

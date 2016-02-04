@@ -10,7 +10,7 @@ $theme = ThemeOption::getInstance();
   <title><?php echo app_get_page_title(); ?></title>
   
   <!-- meta -->
-  <?php include dirname(__FILE__).'/incl-open-graph-meta.php'; ?>
+  <?php include __DIR__.'/incl-open-graph-meta.php'; ?>
 
   
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
