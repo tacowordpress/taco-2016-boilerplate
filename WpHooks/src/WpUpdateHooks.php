@@ -22,8 +22,8 @@ class WpUpdateHooks
         }
         $event->getIO()->write(
             join('', array('WordPress has been installed and "wp-config.php" ',
-                'in the folder "html" has been updated to ",
-                "point to the non-public root "wp-config.php" file.'
+                'in the folder "html" has been updated to ',
+                'point to the non-public root "wp-config.php" file.'
             ))
         );
 
