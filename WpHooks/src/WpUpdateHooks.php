@@ -46,7 +46,6 @@ class WpUpdateHooks
         $c[] = "php ".$composer_path. " install";
         exec(join('',$c));
 
-        self::deleteTree(__DIR__.'/../../wordpress-temp');
     }
 
 
@@ -64,6 +63,9 @@ class WpUpdateHooks
         echo 'Keep your database info somewhere for safe keeping!';
         echo "\r\n";
         echo "\r\n";
+
+        // cleanup
+        self::deleteTree(__DIR__.'/../../wordpress-temp');
     }
 
 
