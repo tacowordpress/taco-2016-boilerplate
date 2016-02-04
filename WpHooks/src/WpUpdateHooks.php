@@ -31,7 +31,10 @@ class WpUpdateHooks
 
     public static function installComposerInTheme()
     {
-        $composer_path = `which composer.phar`;
+        $composer_path = `which composer`;
+        if(!strlen($composer_path)) {
+            $composer_path = `which composer.phar`;
+        }
         if (!preg_match('/composer/', $composer_path)) {
             echo "\r\n";
             echo "This script seems to be having trouble finding your composer.phar \r\n";
