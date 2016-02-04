@@ -1,13 +1,11 @@
-
+/wp-config.php
 /html/*
 !/html/wp-content/
+!/html/.htaccess
 
 # ignore composer dir
 /vendor
-html/wp-content/themes/taco-theme/app/core/vendor/*
-!html/.htaccess
-
-
+/html/wp-content/themes/taco-theme/app/core/vendor/*
 
 *.log
 *.zip
