@@ -11,6 +11,7 @@ class Collection extends \AppLibrary\Collection {}
 class Color extends \AppLibrary\Color {}
 class Html extends \AppLibrary\Html {}
 class Num extends \AppLibrary\Num {}
+class Obj extends \AppLibrary\Obj {}
 class Str extends \AppLibrary\Str {}
 class States extends \AppLibrary\States {}
 
