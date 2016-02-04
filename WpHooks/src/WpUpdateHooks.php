@@ -35,7 +35,7 @@ class WpUpdateHooks
         if (!preg_match('/composer/', $composer_path)) {
             echo "\r\n";
             echo "This script seems to be having trouble finding your composer.phar \r\n";
-            echo "Please cd into the taco-theme/app directory and manually run \"composer install\" \r\n";
+            echo "Please cd into the taco-theme/app/core directory and manually run \"composer install\" \r\n";
             echo "\r\n";
         }
         $composer_path = preg_replace('/(\s+)/', '', $composer_path);
