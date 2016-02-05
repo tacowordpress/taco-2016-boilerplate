@@ -249,7 +249,7 @@ Giving "on_success" a value of callable in the form's conf settings will allow y
 $my_contact_form = new TacoForm(
   array(
     'conf_name' => 'contact form configuration',
-    'on_success' => function($form_conf) {
+    'on_success' => function($entry_object, $form_conf) {
     
       // send mail on the form's success
       $to = 'info@yourwebsite.com';
