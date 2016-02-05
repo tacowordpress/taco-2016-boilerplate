@@ -51,7 +51,8 @@ class TacoForm {
       'success_message' => null,
       'error_message' => null,
       'success_redirect_url' => null,
-      'label_field_wrapper' => 'TacoForm::rowColumnWrap'
+      'label_field_wrapper' => 'TacoForm::rowColumnWrap',
+      'on_success' => null
     );
 
     // we need this to uniquely identify the form conf that will get created or loaded
@@ -92,7 +93,14 @@ class TacoForm {
       }
     }
 
-    
+    // if a callback is defined call it on success
+    if(self::$success === true) {
+      if($this->settings['on_success']
+        && is_callable($this->settings['on_success'])) {
+        $this->settings['on_success']($this);
+      }
+    }
+
     // --- messages ---
     
     // first get global default messages
