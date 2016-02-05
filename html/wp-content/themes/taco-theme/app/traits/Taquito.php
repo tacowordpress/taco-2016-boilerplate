@@ -394,4 +394,10 @@ trait Taquito  {
     }
     return false;
   }
+
+  public static function deletePosts($ids, $force=true) {
+    foreach($ids as $id) {
+      wp_delete_post($id, $force);
+    }
+  }
 }

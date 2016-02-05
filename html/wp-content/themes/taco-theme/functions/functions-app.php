@@ -211,3 +211,12 @@ function add_non_vermilion_admin_menu_items() {
 add_action('admin_print_styles', function() {
   echo '<style>p a[href*="options-reading.php"] { padding: 2px; background-color: red; color: white; };</style>';
 });
+
+// use the singles folder for all single-{post_type} or single.php template/s
+add_filter('single_template', function() {
+  global $post;
+  if(!file_exists(__DIR__.sprintf('/../singles/single-%s.php', $post->post_type))) {
+    return __DIR__.'/../singles/single.php';
+  }
+  return __DIR__.sprintf('/../singles/single-%s.php', $post->post_type);
+});
