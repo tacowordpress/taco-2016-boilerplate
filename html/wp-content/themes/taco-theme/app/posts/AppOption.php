@@ -1,15 +1,34 @@
 <?php
 
-class ThemeOptBase extends \Taco\Post {
+class AppOption extends \Taco\Post {
+  public $class = __CLASS__;
+
   public static $_instance;
-  
   const KEY_IS_ACTIVE = 'is_active';
+  
+  public function getFields() {
+    return array_merge(self::getBaseFields(), array(
+      'social_facebook'=>array('type'=>'link', 'label'=>'Facebook', 'default'=>'ReadingPartners.org'),
+      'social_twitter'=>array('type'=>'link', 'label'=>'Twitter', 'default'=>'readingpartners'),
+      
+      'contact_street'=>array('type'=>'text', 'label'=>'Street', 'default'=>''),
+      'contact_city'=>array('type'=>'text', 'label'=>'City', 'default'=>''),
+      'contact_state'=>array('type'=>'select', 'label'=>'State', 'options'=>States::getAll(), 'default'=>''),
+      'contact_zip'=>array('type'=>'text', 'label'=>'Zip', 'default'=>''),
+      'contact_email'=>array('type'=>'email', 'label'=>'Email', 'default'=>''),
+      'contact_phone'=>array('type'=>'text', 'label'=>'Phone', 'default'=>''),
+      
+      'analytics_key'=>array('type'=>'text', 'label'=>'Google Analytics ID', 'default'=>''),
+      'analytics_tag_manager_key'=>array('type'=>'text', 'label'=>'Google Tag Manager ID', 'default'=>''),
+    ));
+  }
+
   
   /**
    * Admin fields
    * You should array_merge your fields with parent::getFields when extending this class
    */
-  public function getFields() {
+  public function getBaseFields() {
     return array(
       self::KEY_IS_ACTIVE=>array('type'=>'checkbox'),
     );
@@ -28,13 +47,13 @@ class ThemeOptBase extends \Taco\Post {
    * Which core fields does this support?
    */
   public function getSupports() {
-    return array('title');
+    return array('title', 'editor');
   }
   
   
   
   /**
-   * Exclude theme options from search
+   * Exclude app options from search
    */
   public function getExcludeFromSearch() {
     return true;
@@ -44,7 +63,7 @@ class ThemeOptBase extends \Taco\Post {
   /**
    * Get the meta boxes
    * Note: If you're on PHP 5.4, you'll get warning b/c you're using a non-static method in a static contest
-   *       In that case, you'll need to switch ThemeOption::getFields() to static::getFields()
+   *       In that case, you'll need to switch AppOption::getFields() to static::getFields()
    */
   public function getMetaBoxes() {
     $groups = $this->getPrefixGroupedMetaBoxes();
@@ -55,15 +74,15 @@ class ThemeOptBase extends \Taco\Post {
   
   
   /**
-   * Get the active instance of ThemeOption
+   * Get the active instance of AppOption
    */
   public static function getInstance() {
     if(!isset(self::$_instance)) {
-      $class = 'ThemeOption';
+      $class = __CLASS__;
       $helper = new $class;
       self::$_instance = $helper->getOneBy(self::KEY_IS_ACTIVE, true);
       
-      // If the default theme-option post is deleted from WordPress
+      // If the default app-option post is deleted from WordPress
       // then just create an instance on the fly which will use the default values in getFields
       if(!is_object(self::$_instance)) self::$_instance = new $class;
     }
@@ -98,7 +117,7 @@ class ThemeOptBase extends \Taco\Post {
    * @return bool
    */
   public function save($exclude_post=false) {
-    // Only one theme option configuration can be active
+    // Only one app option configuration can be active
     if($this->get(self::KEY_IS_ACTIVE)) {
       $instance = self::getInstance();
       if($instance->get('ID') && $instance->get('ID') !== $this->get('ID')) {
@@ -112,31 +131,28 @@ class ThemeOptBase extends \Taco\Post {
   
   
   /**
-   * Hide Theme Options Base from the admin menu
-   */
-  public function getPostTypeConfig() {
-    return ($this->getPostType() === 'theme-opt-base')
-      ? null
-      : parent::getPostTypeConfig();
-  }
-  
-  
-  /**
    * Create the default instance if necessary
    * @return bool
    */
   public static function createDefaultInstanceIfNecessary() {
-    if(!class_exists('ThemeOption') && !class_exists('ThemeOption')) return;
+    if(self::getCount()) return;
     
-    $class = 'ThemeOption';
+    $class = __CLASS__;
     $instance = new $class;
-    if($instance->getCount()) return;
-    
     $instance->set('post_title', 'Default');
     $instance->set('is_active', true);
     $instance->save();
   }
+
+  public static function getStatIconOptions() {
+    return array(
+      'icon-classroom'=>'Apple and Books',
+      'icon-grad'=>'Graduation Hat',
+      'icon-user'=>'Person',
+      'icon-clock'=>'Clock',
+    );
+  }
 }
 
 // Make sure a record exists
-add_action('plugins_loaded', 'ThemeOptBase::createDefaultInstanceIfNecessary');
+add_action('plugins_loaded', 'AppOption::createDefaultInstanceIfNecessary');

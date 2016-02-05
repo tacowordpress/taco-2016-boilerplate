@@ -1,4 +1,4 @@
-<?php $analytics_tag_manager_key = ThemeOption::getInstance()->get('analytics_tag_manager_key'); ?>
+<?php $analytics_tag_manager_key = AppOption::getInstance()->get('analytics_tag_manager_key'); ?>
 <?php if($analytics_tag_manager_key): ?>
   <!-- Google Tag Manager -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=<?php echo $analytics_tag_manager_key; ?>" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

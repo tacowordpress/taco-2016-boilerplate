@@ -1,6 +1,6 @@
 <!doctype html>
 <?php
-$theme = ThemeOption::getInstance();
+$theme = AppOption::getInstance();
 ?>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" <?php language_attributes(); ?>> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" <?php language_attributes(); ?>> <![endif]-->
