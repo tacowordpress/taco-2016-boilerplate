@@ -24,10 +24,18 @@ class Page extends \Taco\Post {
   }
   
   public function getFieldsByPageTemplate($template_file_name) {
-    if($template_file_name === 'tmpl-example.php' ) {
-      return array();
+    $template_fields = [];
+    
+    if($template_file_name === 'tmpl-example.php') {
+      $template_fields = array_merge($template_fields, [
+        'field_name' => [
+          'type' => 'text',
+          'description' => '',
+        ],
+      ]);
     }
-    return array();
+    
+    return $template_fields;
   }
   
   public function loadPost() {
