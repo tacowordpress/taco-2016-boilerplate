@@ -93,16 +93,17 @@ function app_image_path($path, $size) {
   // Can't find the file? Figure out the correct path from the database
   global $wpdb;
   $guid = site_url().$dir.'/'.$fname_prefix.'.'.$fext;
-  $sql = "
-    select
+  $prepared = $wpdb->prepare(
+    "SELECT
       pm.meta_value
-    from $wpdb->posts p
-    inner join $wpdb->postmeta pm
-      on p.ID = pm.post_id
-    where p.guid = %s
-    and pm.meta_key = '_wp_attachment_metadata'
-    limit 1";
-  $prepared = $wpdb->prepare($sql, $guid);
+    FROM $wpdb->posts p
+    INNER JOIN $wpdb->postmeta pm
+      ON p.ID = pm.post_id
+    WHERE p.guid = %s
+    AND pm.meta_key = '_wp_attachment_metadata'
+    LIMIT 1",
+    $guid
+  );
   $row = $wpdb->get_row($prepared);
   if(is_object($row)) {
     $meta = unserialize($row->meta_value);
