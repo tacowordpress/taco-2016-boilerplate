@@ -24,13 +24,16 @@ $loader->addNamespace('\AppLibrary\\', __DIR__.'/lib/AppLibrary/src');
 require_once __DIR__.'/traits/Taquito.php';
 
 // settings
-require_once __DIR__.'/posts/ThemeOptionBase.php';
-require_once __DIR__.'/posts/ThemeOption.php';
+require_once __DIR__.'/posts/AppOption.php';
 
 // forms
 require_once __DIR__.'/forms/core/loader.php';
 
+// Taco Search
+require_once __DIR__.'/modules/TacoSearch/core/loader.php';
+
 //posts
+require_once __DIR__.'/posts/Post.php';
 require_once __DIR__.'/posts/Page.php';
 
 //terms
