@@ -242,8 +242,9 @@ echo $contact_form->render(function($form_conf) { ?>
 Yes, we are defining the fields in the template.
 
 
+
 ##### Callbacks (events)
-Giving "on_success" a value of callable in the form conf settings, will allow you to trigger function on the form's success.
+Giving "on_success" a value of callable in the form's conf settings will allow you to trigger a function/method after the form's success.
 ```php
 $my_contact_form = new TacoForm(
   array(
