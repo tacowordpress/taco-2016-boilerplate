@@ -52,10 +52,8 @@ trait Taquito  {
   public function getTheExcerptOf($field_key, $start_pos=0, $max_length=100) {
     $str = $this->get($field_key);
     if(strlen($str) > $max_length) {
-      $excerpt   = substr($str, $start_pos, $max_length-3);
-      $last_space = strrpos($excerpt, ' ');
-      $excerpt   = substr($excerpt, 0, $last_space);
-      $excerpt  .= '...';
+      $excerpt = trim(substr($str, $start_pos, $max_length-3));
+      $excerpt .= '...';
     } else {
       $excerpt = $str;
     }
