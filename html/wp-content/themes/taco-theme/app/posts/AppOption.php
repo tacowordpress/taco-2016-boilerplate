@@ -51,6 +51,13 @@ class AppOption extends \Taco\Post {
   }
   
   
+  /**
+   * Customize with client name
+   */
+  public function getSingular() {
+    return 'App Option';
+  }
+  
   
   /**
    * Exclude app options from search
