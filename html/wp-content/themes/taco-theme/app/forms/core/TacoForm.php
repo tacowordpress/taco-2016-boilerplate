@@ -487,6 +487,7 @@ class TacoForm {
     );
 
     $html[] = $rendered_template;
+    $html[] = '</form>';
     return join('', $html);
   }
 
@@ -533,6 +534,7 @@ class TacoForm {
       $this->get('submit_button_text')
     ));
     $html[] = $this->renderFormEditLink();
+    $html[] = '</form>';
     return join('', $html);
   }
 
