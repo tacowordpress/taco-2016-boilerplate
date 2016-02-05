@@ -15,5 +15,5 @@ class Obj extends \AppLibrary\Obj {}
 class Str extends \AppLibrary\Str {}
 class States extends \AppLibrary\States {}
 
-require_once __DIR__.'/theme-functions/functions-generic.php';
-require_once __DIR__.'/theme-functions/functions-app.php';
+require_once __DIR__.'/functions/functions-generic.php';
+require_once __DIR__.'/functions/functions-app.php';

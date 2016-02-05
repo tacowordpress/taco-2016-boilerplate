@@ -1,4 +1,4 @@
-<?php include __DIR__.'/incl-theme/incl-head.php'; ?>
+<?php include __DIR__.'/includes/incl-head.php'; ?>
 
 <!-- page-wrap used for sticky footer -->
 <div class="page-wrap">
