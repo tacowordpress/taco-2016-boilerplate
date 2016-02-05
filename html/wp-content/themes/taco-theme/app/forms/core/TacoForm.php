@@ -13,6 +13,7 @@ class TacoForm {
   public static $success = false;
   public static $session_field_errors = array();
   public static $session_field_values = array();
+  public static $entry_id;
 
   public $fields = null;
   public $template_html = null;
@@ -52,7 +53,7 @@ class TacoForm {
       'error_message' => null,
       'success_redirect_url' => null,
       'label_field_wrapper' => 'TacoForm::rowColumnWrap',
-      'on_success' => null
+      'on_success' => null,
     );
 
     // we need this to uniquely identify the form conf that will get created or loaded
@@ -97,10 +98,12 @@ class TacoForm {
     if(self::$success === true) {
       if($this->settings['on_success']
         && is_callable($this->settings['on_success'])) {
-        $this->settings['on_success']($this);
+        $taco_object = \Taco\Post::find(self::$entry_id);
+        $this->settings['on_success']($taco_object, $this);
       }
     }
 
+    
     // --- messages ---
     
     // first get global default messages
@@ -707,6 +710,10 @@ class TacoForm {
       self::$success = true;
       $_SESSION['form_conf_success'] = false;
     }
+    if(array_key_exists('entry_id', $_SESSION)) {
+      self::$entry_id = $_SESSION['entry_id'];
+      unset($_SESSION['entry_id']);
+    }
     if(array_key_exists('session_field_errors', $_SESSION)
       && $_SESSION['session_field_errors']) {
       self::$session_field_errors = $_SESSION['session_field_errors'];
@@ -756,6 +763,19 @@ class TacoForm {
 
 
   /**
+   * set the last successful entry's ID in the session
+   * @return void
+   */
+  public static function setEntryID($entry_id) {
+    session_start();
+    if(!array_key_exists('entry_id', $_SESSION)) {
+      $_SESSION['entry_id'] = $entry_id;
+    }
+    session_write_close();
+  }
+
+
+  /**
    * clear messages in the session
    * @return void
    */
@@ -797,5 +817,4 @@ class TacoForm {
     }
     return false;
   }
-
 }

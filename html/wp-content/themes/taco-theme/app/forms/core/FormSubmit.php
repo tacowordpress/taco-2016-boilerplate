@@ -1,6 +1,6 @@
 <?php
 
-// a class for processing form submissions specfically for Taco WordPress
+// a class for processing form submissions specifically for Taco WordPress
 
 include getenv('HTTP_BOOTSTRAP_WP'); // bootstrap WordPress
 
@@ -104,9 +104,13 @@ class FormSubmit {
     
     // Assign info and save
     $record->assign($record_info);
-    if(!$record->save()) {
+
+    $entry_id = $record->save();
+
+    if(!$entry_id) {
       return false;
     }
+    TacoForm::setEntryID($entry_id);
     return true;
   }
 
