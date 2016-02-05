@@ -70,7 +70,7 @@ function app_image_path($path, $size) {
   $fdir = realpath(str_replace('//', '/', ABSPATH.$dir)).'/';
   
   // Filename without any size suffix or extension (e.g. without -144x200.jpg)
-  $fname_prefix = preg_replace('/(-[\d]{1,}x[\d]{1,})?.'.$fext.'$/i', '', $fname);
+  $fname_prefix = preg_replace('/(?:-\d+x\d+)?\.'.$fext.'$/i', '', $fname);
   $out_fname = sprintf(
     '%s-%sx%s.%s',
     $fname_prefix,
@@ -129,8 +129,7 @@ function app_image_path($path, $size) {
  */
 function get_asset_path($relative_path) {
   $clean_relative_path = $relative_path;
-  $clean_relative_path = preg_replace('/^[\/]{1,}/', '', $clean_relative_path);
-  $clean_relative_path = preg_replace('/^_[\/]{1,}/', '', $clean_relative_path);
+  $clean_relative_path = preg_replace('/^[\/_]+/', '', $clean_relative_path);
   return sprintf(
     '%s/_/%s%s',
     get_template_directory_uri(),
@@ -159,7 +158,7 @@ function get_app_icons() {
       $paths[] = '<link rel="apple-touch-icon" sizes="'.$sizes[0].'" href="'.$file.'">';
       continue;
     }
-    if(preg_match('/favicon/', $file) && !preg_match('/(\d+)/', $file)) {
+    if(preg_match('/favicon/', $file) && !preg_match('/\d+/', $file)) {
       $paths[] = '<link rel="icon" type="image/ico" sizes="'.$sizes[0].'" href="'.$file.'">';
       continue;
     }

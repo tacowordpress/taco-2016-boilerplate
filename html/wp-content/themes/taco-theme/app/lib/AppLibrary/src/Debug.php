@@ -59,7 +59,7 @@ class Debug {
       
       // Add line
       $prefix = str_repeat($indent, $level+1) . $var_name . $breadcrumbs . $equals;
-      if($line) $out[] = $prefix . preg_replace('/\{([\r\n\s\t]{1,})\}/s', '{ }', $line);
+      if($line) $out[] = $prefix . preg_replace('/\{[\r\n\s\t]+\}/s', '{ }', $line);
       
       // Reset the breadcrumbs
       $breadcrumbs = $original_breadcrumbs;

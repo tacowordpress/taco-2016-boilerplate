@@ -18,9 +18,8 @@ class Str {
     // Cleanup
     $out = str_replace('_', ' ', $str);
     $out = ucwords(strtolower($out));
-    $out = preg_replace('/[\s]{2,}/', ' ', $out);
-    $out = preg_replace('/^[\s]/', '', $out);
-    $out = preg_replace('/[\s]$/', '', $out);
+    $out = preg_replace('/\s{2,}/', ' ', $out);
+    $out = preg_replace('/^\s|\s$/', '', $out);
     if(strlen($out) === 0) return $out;
 
     // Gather stopwords before looping
@@ -72,7 +71,7 @@ class Str {
     $first_word_lower = strtolower($words[0]);
     $first_word_lower_no_contraction = preg_replace("/'s$/", '', $first_word_lower);
     $is_question = in_array($first_word_lower_no_contraction, self::questionWords());
-    $has_question_mark = (bool) preg_match('/[\?]{1,}$/', $out);
+    $has_question_mark = (bool) preg_match('/\?+$/', $out);
     if($is_question && !$has_question_mark) $out .= '?';
 
     return $out;
@@ -89,8 +88,7 @@ class Str {
     $out = strtolower($str);
     $out = preg_replace('/[^a-z0-9' . $separator . ']/', $separator, $out);
     $out = preg_replace('/[' . $separator . ']{2,}/', $separator, $out);
-    $out = preg_replace('/^' . $separator . '/', '', $out);
-    $out = preg_replace('/' . $separator . '$/', '', $out);
+    $out = preg_replace('/^' . $separator . '|' . $separator . '$/', '', $out);
     return $out;
   }
 
@@ -160,7 +158,7 @@ class Str {
   public static function phone($phone, $format='(%s) %s-%s', $default_area_code=null) {
     if(!$format) $format = '(%s) %s-%s';
     
-    $num = preg_replace('/[^0-9]{1,}/', '', $phone);
+    $num = preg_replace('/[^0-9]+/', '', $phone);
     if(strlen($num) < 10) $num = $default_area_code.$num;
     if(strlen($num) < 10) return $phone;
     
