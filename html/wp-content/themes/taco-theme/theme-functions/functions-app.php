@@ -209,5 +209,5 @@ function add_non_vermilion_admin_menu_items() {
 
 // make the search engines discouraged text more visible
 add_action('admin_print_styles', function() {
-  echo '<style>a[href*="options-reading.php"] { padding: 2px; background-color: red; color: white; };</style>';
+  echo '<style>p a[href*="options-reading.php"] { padding: 2px; background-color: red; color: white; };</style>';
 });
