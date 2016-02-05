@@ -2,6 +2,7 @@
 /html/*
 !/html/wp-content/
 !/html/.htaccess
+shortcut-taco-theme
 
 # ignore composer dir
 /vendor
