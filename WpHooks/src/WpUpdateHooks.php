@@ -66,6 +66,7 @@ class WpUpdateHooks
 
         // cleanup
         self::deleteTree(__DIR__.'/../../wordpress-temp');
+        rename(__DIR__.'/../../README.md', __DIR__.'/../../boilerplate-readme.md');
     }
 
 
