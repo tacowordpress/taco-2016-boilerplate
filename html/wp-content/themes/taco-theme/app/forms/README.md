@@ -240,6 +240,40 @@ echo $contact_form->render(function($form_conf) { ?>
 
 Yes, we are defining the fields in the template.
 
+
+##### Callbacks (events)
+Giving "on_success" a value of closure in the form's conf settings will allow you to trigger a function/method after the form's success.
+```php
+$my_contact_form = new TacoForm(
+  array(
+    'conf_name' => 'contact form configuration',
+    'on_success' => function($entry_object, $form_conf) {
+    
+      // send mail on the form's success
+      $to = 'info@yourwebsite.com';
+      $subject = 'A message from the site\'s general contact form';
+      $message = '';
+      mail($to, $subject, $message, $headers);
+    }
+  )
+);
+...
+```
+Important: Using a closure intangent with the "success_redirect_url" specified will throw an error.
+To get around this, you must specify a string callback instead. See below.
+
+```php
+
+...
+// the right way
+'success_redirect_url' => 'http://mywebsite.com/thanyou-message',
+'on_success' => 'MyClass::myMethod'
+
+// the wrong way
+'success_redirect_url' => 'http://mywebsite.com/thanyou-message',
+'on_success' => function($entry, $form_conf) { }
+```
+
 More to come...
 
 
