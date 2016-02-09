@@ -269,11 +269,11 @@ To get around this, you must specify a string callback instead. See below.
 
 ...
 // the right way
-'success_redirect_url' => 'http://mywebsite.com/thanyou-message',
+'success_redirect_url' => 'http://mywebsite.com/thankyou-message',
 'on_success' => 'MyClass::myMethod'
 
 // the wrong way
-'success_redirect_url' => 'http://mywebsite.com/thanyou-message',
+'success_redirect_url' => 'http://mywebsite.com/thankyou-message',
 'on_success' => function($entry, $form_conf) { }
 ```
 
