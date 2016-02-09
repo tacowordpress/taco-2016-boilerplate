@@ -259,7 +259,10 @@ $my_contact_form = new TacoForm(
 );
 ...
 ```
-Important: Using a closure intangent with the "success_redirect_url" specified will throw an error.
+Please note that you must define your callback with 2 parameters i.e. (Object $entry, Object $form_conf)
+If you do not wish to use these, set them to null.
+
+Important: Using a closure in tangent with the "success_redirect_url" specified will throw an error.
 To get around this, you must specify a string callback instead. See below.
 
 ```php
