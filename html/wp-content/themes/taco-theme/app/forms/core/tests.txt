@@ -1,0 +1,7 @@
+TEST NOTES
+
+The following tests should be written:
+ * test on_success string callback with redirect_success_url
+ * test on_success string callback without redirect_success_url
+ * test on_success closure callback without redirect_success_url
+ * test if saving the form_config in wordpress will affect the above (on_success)

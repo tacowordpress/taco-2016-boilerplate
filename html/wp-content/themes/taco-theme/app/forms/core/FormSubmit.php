@@ -4,6 +4,7 @@
 
 include getenv('HTTP_BOOTSTRAP_WP'); // bootstrap WordPress
 
+
 if(array_key_exists('taco_form_submission', $_POST)
   && $_POST['taco_form_submission'] == true) {
   FormSubmit::processSubmission();
@@ -13,7 +14,7 @@ if(array_key_exists('taco_form_submission', $_POST)
 class FormSubmit {
     
   public static $record = null;
-
+  public static $form_conf_id;
 
   /**
    * redirect to the referring page
@@ -37,7 +38,25 @@ class FormSubmit {
     if(!self::checkSubmission()) {
       return self::redirectToReferringPage();
     }
+    self::doOnSuccess();
     return self::redirectAfterSuccess();
+  }
+
+
+  public static function doOnSuccess() {
+    if(!self::$form_conf_id) return;
+    if(!is_numeric(self::$form_conf_id)) return;
+
+    $form_config = \Taco\Post::find(self::$form_conf_id);
+    if(!\AppLibrary\Obj::iterable($form_config)) return;
+
+    $on_success = $form_config->get('on_success');
+    if(!is_callable($on_success)) return;
+    $method_class = explode('::', $on_success)[0];
+    $method = explode('::', $on_success)[1];
+
+
+    return $method_class::$method(self::$record, $form_config);
   }
 
 
@@ -110,7 +129,11 @@ class FormSubmit {
     if(!$entry_id) {
       return false;
     }
+
     TacoForm::setEntryID($entry_id);
+    self::$form_conf_id = (array_key_exists('form_config', $source))
+      ? $source['form_config']
+      : null;
     return true;
   }
 

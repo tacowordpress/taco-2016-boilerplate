@@ -48,8 +48,7 @@ These are the properties and values (defaults shown below) that can be used to s
       'success_message' => null,
       'error_message' => null,
       'success_redirect_url' => null,
-      'label_field_wrapper' => 'TacoForm::rowColumnWrap',
-      'on_success' => null
+      'label_field_wrapper' => 'TacoForm::rowColumnWrap'
     );
 ```
 Details on what each property/value does is coming soon.
@@ -240,27 +239,6 @@ echo $contact_form->render(function($form_conf) { ?>
 ```
 
 Yes, we are defining the fields in the template.
-
-
-
-##### Callbacks (events)
-Giving "on_success" a value of callable in the form's conf settings will allow you to trigger a function/method after the form's success.
-```php
-$my_contact_form = new TacoForm(
-  array(
-    'conf_name' => 'contact form configuration',
-    'on_success' => function($entry_object, $form_conf) {
-    
-      // send mail on the form's success
-      $to = 'info@yourwebsite.com';
-      $subject = 'A message from the site\'s general contact form';
-      $message = '';
-      mail($to, $subject, $message, $headers);
-    }
-  )
-);
-...
-```
 
 More to come...
 

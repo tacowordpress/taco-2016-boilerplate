@@ -1,0 +1,9 @@
+Todos - Feb 9th, 2016
+ * create setting to optionally send data with a success_redirect_url
+ * allow closures in the column wrapper callback setting
+ * create an isClosure method
+ * make the cache setting work (caches form html)
+ * create documentation for all settings in README.md
+ * create tests using phpunit
+ * handle GET requests (using GET currently will break things)
+ * clean up FormSubmit and FormEntry unused legacy methods

@@ -46,23 +46,24 @@ class TacoForm {
       'hide_labels' => false,
       'column_classes' => 'small-12 columns',
       'exclude_post_content' => false,
-      'use_cache' => false,
-      'cache_expiration' => null,
+      'use_cache' => false, // todo: needs development
+      'lock' => false, // prevent saving dev settings
       'submit_button_text' => 'submit',
       'success_message' => null,
       'error_message' => null,
       'success_redirect_url' => null,
       'label_field_wrapper' => 'TacoForm::rowColumnWrap',
-      'on_success' => null,
+      'on_success' => null, // on success event callback
     );
 
     // we need this to uniquely identify the form conf that will get created or loaded
-    if(!(array_key_exists('conf_name', $args) && strlen($args['conf_name']))) {
-      throw new Exception('conf_name must be defined in the args array');
-      exit;
+    if(!(array_key_exists('conf_name', $args)
+      && strlen($args['conf_name']))) {
+        throw new Exception('conf_name must be defined in the args array');
+        exit;
     }
 
-
+    // if the form configuration exists, load it
     $db_conf = $this->findFormConfigInstance($args['conf_name']);
     if($db_conf) {
       $this->conf_instance = $db_conf;
@@ -86,6 +87,8 @@ class TacoForm {
         $this->fields = $v;
         continue;
       }
+      if($k == 'on_success') continue;
+
       if(array_key_exists($k, $conf_fields)) {
         $this->conf_instance->set($args[$k], $args[$k]);
       }
@@ -94,16 +97,49 @@ class TacoForm {
       }
     }
 
+
+    /* We cannot use a closure with an event callback
+     *  where a redirect url is defined
+     * Instead we must use a string
+     */
+    if(
+      !is_object($this->settings['on_success'])
+      && strlen($this->settings['on_success'])
+      && strlen($this->settings['success_redirect_url'])
+    ) {
+      $this->conf_instance->set(
+        'on_success',
+        $this->settings['on_success']
+      );
+    } else {
+      $this->conf_instance->set(
+        'on_success',
+        null
+      );
+      $this->conf_instance->set(
+        'success_redirect_url',
+        null
+      );
+    }
+
     // if a callback is defined call it on success
     if(self::$success === true) {
-      if($this->settings['on_success']
-        && is_callable($this->settings['on_success'])) {
+      if($args['on_success']
+        && !strlen($this->settings['success_redirect_url'])) {
         $taco_object = \Taco\Post::find(self::$entry_id);
-        $this->settings['on_success']($taco_object, $this);
+        if(is_string($args['on_success'])) {
+          // is it a string?
+          $class_and_method = explode('::', $args['on_success']);
+          $method_class = $class_and_method[0];
+          $class_method = $class_and_method[1];
+          $method_class::$class_method($taco_object, $this);
+        } else {
+          // it's a closure
+          $args['on_success']($taco_object, $this);
+        }
       }
     }
 
-    
     // --- messages ---
     
     // first get global default messages
@@ -114,6 +150,7 @@ class TacoForm {
     if(array_key_exists('success_message', $this->settings)) {
       $defaults['success_message'] = $this->settings['success_message'];
     }
+
     if(array_key_exists('error_message', $this->settings)) {
       $defaults['error_message'] = $this->settings['error_message'];
     }
@@ -154,9 +191,35 @@ class TacoForm {
       $this->conf_instance->set('fields', serialize($this->fields));
     }
 
+    // don't use a closure if the success_redirect_url is used
+    if(strlen($this->settings['success_redirect_url'])
+      && is_string($args['on_success'])) {
+      $this->conf_instance->set(
+        'on_success',
+        $args['on_success']
+      );
+    }
+
+    // throw an error if settings includes a success_redirect_url with a closure
+    if(!is_string($args['success'])
+      && strlen($this->settings['success_redirect_url'])) {
+        throw new Exception(
+          'TacoForm: If you are using "success_redirect_url", you cannot use a closure.
+          Use must specifiy valid string callback e.g. "MyClass::myMethod"',
+          1
+        );
+    }
+
     // assign conf machine name
-    $this->conf_machine_name = \AppLibrary\Str::machine($this->get('conf_name'), '-');
-    $this->conf_instance->set('post_name', $this->conf_machine_name);
+    $this->conf_machine_name = \AppLibrary\Str::machine(
+      $this->get('conf_name'),
+      '-'
+    );
+
+    $this->conf_instance->set(
+      'post_name',
+      $this->conf_machine_name
+    );
 
     // assign redirect url from dev's settings
     // if the admin adds this value, it will need to be overridden from wp-admin
@@ -166,11 +229,18 @@ class TacoForm {
         $this->settings['success_redirect_url']
       );
     }
-    
-    // if the entry doesn't exist create it in the db
-    $this->conf_ID = $this->conf_instance->save();
-    // get the updated form conf after save
-    $this->conf_instance = FormConfig::find($this->conf_ID);
+
+
+    /* Do not save settings if locked (prevents extra db/backend work)
+     * Checking for the prod environment could
+     *  be one way automatically turning the lock on or off
+     */
+    if(!($this->settings['lock'] && $this->conf_instance->get('ID'))) {
+      // if the entry doesn't exist create it in the db
+      $this->conf_ID = $this->conf_instance->save();
+      // get the updated form conf after save
+      $this->conf_instance = FormConfig::find($this->conf_ID);
+    }
 
     return $this;
   }
@@ -690,7 +760,10 @@ class TacoForm {
     }
     if(in_array(true, $invalid_array)) {
       $invalid = true;
-      $errors[] = sprintf('%s is invalid', \AppLibrary\Str::human($key));
+      $errors[] = sprintf(
+        '%s is invalid',
+        \AppLibrary\Str::human($key)
+      );
     }
     return array($invalid, $errors);
   }

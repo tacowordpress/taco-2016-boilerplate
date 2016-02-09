@@ -23,11 +23,13 @@ class FormConfBase extends \Taco\Post {
       ),
       'form_success_message' => array(
         'type' => 'textarea',
-        'default' => 'Thanks for your inquiry!'
       ),
       'form_error_message' => array(
         'type' => 'textarea'
       ),
+      'on_success' => array(
+        'type' => 'hidden'
+      )
     );
   }
 
