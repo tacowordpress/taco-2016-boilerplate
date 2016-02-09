@@ -66,7 +66,9 @@ class WpUpdateHooks
 
         // cleanup
         self::deleteTree(__DIR__.'/../../wordpress-temp');
-        rename(__DIR__.'/../../README.md', __DIR__.'/../../boilerplate-readme.md');
+        if(file_exists(__DIR__.'/../../README.md')) {
+            rename(__DIR__.'/../../README.md', __DIR__.'/../../boilerplate-readme.md');
+        }
         symlink(__DIR__.'/../../html/wp-content/themes/taco-theme', __DIR__.'/../../shortcut-taco-theme');
     }
 
