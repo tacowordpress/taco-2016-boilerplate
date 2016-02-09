@@ -272,7 +272,7 @@ To get around this, you must specify a string callback instead. See below.
 'success_redirect_url' => 'http://mywebsite.com/thankyou-message',
 'on_success' => 'MyClass::myMethod'
 
-// the wrong way
+// the wrong way - this will throw an error
 'success_redirect_url' => 'http://mywebsite.com/thankyou-message',
 'on_success' => function($entry, $form_conf) { }
 ```
