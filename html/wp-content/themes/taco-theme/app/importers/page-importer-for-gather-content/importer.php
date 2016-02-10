@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * This script uses the Gather Content API to fetch pages
+ * The method "savePagesToWP" will save these pages retaining
+ *  parent child relationships.
+ * If the second param of "savePagesToWP" is set to true, it will also
+ *  try and save data to the post_content field.
+ * @link https://gathercontent.com/support/developer-api/
+ */
+
 include getenv('HTTP_BOOTSTRAP_WP');
 if(ENVIRONMENT === 'prod') exit;
 
 include __DIR__.'/TacoGatherContent.php';
+
 
 $gather = new TacoGatherContent(
   // url e.g. "https://yourwebsite.com.gathercontent.com/api/0.4/"
