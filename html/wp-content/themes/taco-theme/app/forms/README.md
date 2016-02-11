@@ -285,6 +285,17 @@ class MyClass {
 ...
 
 ```
+##### Form Status
+A form developed using TacoForm has the data attribute "data-form-status". You can use this to tell your custom js script what the form's state is. Below are the three states.
+
+
+`data-form-status="idle"` – form is idle and has not been submitted yet
+
+`data-form-status="has_errors"` – form has invalid values
+
+`data-form-status="success"` – form submission was successful
+
+
 
 More to come...
 
