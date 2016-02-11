@@ -394,9 +394,19 @@ class TacoForm {
 
     // start the form html using an array
     $html = [];
+
+    $form_status = 'idle';
+    if(self::$success) {
+      $form_status = 'success';
+    }
+    if(self::$invalid) {
+      $form_status = 'has_errors';
+    }
+
     $html[] = sprintf(
-      '<form action="%s" method="%s" class="%s" id="%s" data-use-ajax="%s" %s>',
+      '<form action="%s" data-form-status="%s" method="%s" class="%s" id="%s" data-use-ajax="%s" %s>',
       $this->settings['action'],
+      $form_status,
       $this->settings['method'],
       $this->settings['css_class']. ' taco-forms',
       $this->settings['id'],
