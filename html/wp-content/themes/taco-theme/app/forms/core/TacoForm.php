@@ -116,10 +116,12 @@ class TacoForm {
         'on_success',
         null
       );
-      $this->conf_instance->set(
-        'success_redirect_url',
-        null
-      );
+      if(!strlen($this->conf_instance->get('success_redirect_url'))) {
+        $this->conf_instance->set(
+          'success_redirect_url',
+          null
+        );
+      }
     }
 
     // if a callback is defined call it on success
@@ -201,7 +203,7 @@ class TacoForm {
     }
 
     // throw an error if settings includes a success_redirect_url with a closure
-    if(!is_string($args['success'])
+    if(!is_string($args['on_success'])
       && strlen($this->settings['success_redirect_url'])) {
         throw new Exception(
           'TacoForm: If you are using "success_redirect_url", you cannot use a closure.
