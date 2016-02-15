@@ -272,7 +272,7 @@ To get around this, you must specify a string callback instead. See below.
 'success_redirect_url' => 'http://mywebsite.com/thankyou-message',
 'on_success' => 'MyClass::myMethod'
 
-// and then define you class method (must be static)
+// and then define your class method (must be static)
 class MyClass {
   public static function myMethod($entry, $form_conf) {}
 }
