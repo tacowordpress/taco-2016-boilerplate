@@ -1,8 +1,7 @@
 <?php
 
 include getenv('HTTP_BOOTSTRAP_WP'); // bootstrap WordPress
-include __DIR__.'/loader.php';
-
+require __DIR__.'/faker-providers/Resource.php';
 
 if(ENVIRONMENT != 'dev') exit;
 
