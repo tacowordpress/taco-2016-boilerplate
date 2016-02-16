@@ -32,7 +32,7 @@ SetEnvIf REDIRECT_HTTP_BOOTSTRAP_WP (.+) HTTP_BOOTSTRAP_WP=$1
 
 # exclude public access to composer's vendor dir from the theme folder
 # typically the vendor dir is never publically accessible
-RewriteRule ^wp\-content\/themes\/taco\-theme\/app\/core\/vendor($|/) - [F,L]
+RewriteRule ^wp-content/themes/taco-theme/app/core/vendor($|/) - [F,L]
 
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
