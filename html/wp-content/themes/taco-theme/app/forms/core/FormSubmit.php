@@ -125,6 +125,8 @@ class FormSubmit {
     $record->assign($record_info);
 
     $entry_id = $record->save();
+    $record->set('post_title', 'form entry - #'.$entry_id);
+    $record->save();
 
     if(!$entry_id) {
       return false;

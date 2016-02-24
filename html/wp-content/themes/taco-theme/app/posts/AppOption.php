@@ -60,6 +60,14 @@ class AppOption extends \Taco\Post {
   
   
   /**
+   * List after all post types
+   */
+  public function getMenuPosition() {
+    return 58;
+  }
+  
+  
+  /**
    * Exclude app options from search
    */
   public function getExcludeFromSearch() {

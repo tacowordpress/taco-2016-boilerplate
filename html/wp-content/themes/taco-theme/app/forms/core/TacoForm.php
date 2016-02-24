@@ -116,10 +116,12 @@ class TacoForm {
         'on_success',
         null
       );
-      $this->conf_instance->set(
-        'success_redirect_url',
-        null
-      );
+      if(!strlen($this->conf_instance->get('success_redirect_url'))) {
+        $this->conf_instance->set(
+          'success_redirect_url',
+          null
+        );
+      }
     }
 
     // if a callback is defined call it on success
@@ -201,7 +203,7 @@ class TacoForm {
     }
 
     // throw an error if settings includes a success_redirect_url with a closure
-    if(!is_string($args['success'])
+    if(!is_string($args['on_success'])
       && strlen($this->settings['success_redirect_url'])) {
         throw new Exception(
           'TacoForm: If you are using "success_redirect_url", you cannot use a closure.
@@ -392,9 +394,19 @@ class TacoForm {
 
     // start the form html using an array
     $html = [];
+
+    $form_status = 'idle';
+    if(self::$success) {
+      $form_status = 'success';
+    }
+    if(self::$invalid) {
+      $form_status = 'has_errors';
+    }
+
     $html[] = sprintf(
-      '<form action="%s" method="%s" class="%s" id="%s" data-use-ajax="%s" %s>',
+      '<form action="%s" data-form-status="%s" method="%s" class="%s" id="%s" data-use-ajax="%s" %s>',
       $this->settings['action'],
+      $form_status,
       $this->settings['method'],
       $this->settings['css_class']. ' taco-forms',
       $this->settings['id'],
