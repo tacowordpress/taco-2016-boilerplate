@@ -1,14 +1,17 @@
 <?php
 
-
 /**
  * Register the CSS
  */
 function app_get_css() {
+$app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
+  ? '_/css/main.css'
+  : '_/css/main-dev.css';
   return array(
     'all'=>array(
       'foundation' => '_/lib/foundation/css/foundation.min.css',
-      'main' => '_/css/main.css'
+      'fontawesome' => '_/lib/fontawesome/css/font-awesome.min.css',
+      'main' => $app_css
     )
   );
 }

@@ -3,66 +3,50 @@
  * http://vermilion.com
  */
  
-'use strict';
  
 /**
  * Grunt Module
  */
 module.exports = function(grunt) {
  
+'use strict';
 // Project configuration.
 grunt.initConfig({
   pkg: grunt.file.readJSON('package.json'),
   sass: {
-    options: {
-      sourceMap: true
-    },
     dist: {
+      options: {
+        style: 'compressed',
+        sourcemap: 'none'
+      },
       files: {
-        '_/css/main.css': '_/scss/main.scss'
+        '_/css/main.css' : '_/scss/main.scss'
+      }
+    },
+    dev: {
+      options: {
+        style: 'compact',
+        sourcemap: 'inline'
+      },
+      files: {
+        '_/css/main-dev.css': '_/scss/main.scss'
       }
     }
   },
+  
   uglify: {
     options: {
       mangle: {
-        except: ['$', 'jQuery']
+        except: ['$']
       },
       semicolons: true
     },
-    my_target: {
-      files: {
-        '_/js/app.js': ['_/js/main.js']
-      }
-    }
-  },
-  jshint: {
-    files: ['_/js/*.js', '!_/js/app.js'],
-    options: {
-      globals: {
-        jquery: true,
-      },
-      browser: true,
-      devel: true,
-      jquery: true,
-      elision: true,
-      laxbreak: true,
-      laxcomma: true,
-      notypeof: true,
-      bitwise: true,
-      eqeqeq: true,
-      freeze: true,
-      newcap: true,
-      noarg: false,
-      noempty: true,
-      nonbsp: true,
-      nonew: true,
-      regexp: true,
-      undef: true,
-      unused: true,
-      predef: [
-        'Modernizr'
-      ]
+    files: {
+      src: '_/js/modules/*.js',  // source files mask
+      dest: '_/js/min/',    // destination folder
+      expand: true,    // allow dynamic building
+      flatten: true,   // remove all unnecessary nesting
+      ext: '.min.js'   // replace .js to .min.js
     }
   },
     
@@ -70,33 +54,25 @@ grunt.initConfig({
     gruntfile: {
       files: ['gruntfile.js']
     },
-    templates: {
-      files: ['*.html', '*.php'],
-      options: {
-        spawn: false,
-        livereload: true
-      }
-    },
-    jshints: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
-    },
     styles: {
       files: ['_/scss/*.scss'],
-      tasks: ['sass']
+      tasks: ['sass:dist', 'sass:dev']
+    },
+    uglification: {
+      files: ['_/js/*.js', '_/js/modules/*.js'],
+      tasks: ['uglify']
     }
   }
 });
  
 // load plugins here
-grunt.loadNpmTasks('grunt-sass');
+grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-contrib-uglify');
-grunt.loadNpmTasks('grunt-contrib-jshint');
 grunt.loadNpmTasks('grunt-contrib-watch');
 
  
 // Default task(s).
-grunt.registerTask('default', ['sass:dist']);
+grunt.registerTask('default', ['sass:dist', 'sass:dev']);
 grunt.registerTask('dev', ['watch']);
  
 };
