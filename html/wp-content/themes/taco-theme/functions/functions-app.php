@@ -50,6 +50,11 @@ add_action('init', 'app_menus');
 //   add_image_size( 'hero', 680, 450, true ); //(cropped)
 // }
 
+/**
+ * Add support for excerpt
+*/
+add_post_type_support('page', 'excerpt');
+
 
 /**
  * Get an image
