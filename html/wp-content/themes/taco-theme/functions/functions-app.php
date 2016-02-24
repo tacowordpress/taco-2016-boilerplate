@@ -191,6 +191,26 @@ add_action('init', function() {
   }
 });
 
+/* This function serves the purpose of including a php template and
+ * be explicit about what vars it injects.
+ * Typically, you would just set the variable above the include, but
+ * doing it that way makes it hard to follow. In a sense, this also serves
+ * another purpose of stopping the ugly html that some functions/methods generate.
+ * @example include_with(__DIR__.'/incl-filename.php', array('foo' => $foo, 'bar' => $bar));
+ */
+function include_with($path, $array_vars, $once=false) {
+  extract($array_vars);
+  if($once) {
+    include_once $path;
+  } else {
+    include $path;
+  }
+  foreach($array_vars as $k => $v) {
+    unset($$k);
+  }
+  return;
+}
+
 // get rid of admin pages we don't need for non admin users
 add_action('admin_menu', 'remove_non_vermilion_admin_menu_items', 999);
 function remove_non_vermilion_admin_menu_items() {
