@@ -1,7 +1,10 @@
 </div>
 <!--/.page-wrap -->
-something needed in the footer?
+<span class="bottom-edge">&nbsp;</span>
 
+<footer>
+need something in a footer?
+</footer>
 
 
 <?php wp_footer(); ?>
