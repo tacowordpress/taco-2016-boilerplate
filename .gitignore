@@ -9,6 +9,8 @@ shortcut-taco-theme
 /vendor
 /html/wp-content/themes/taco-theme/app/core/vendor/*
 /html/wp-content/uploads/*
+node_modules
+/.sass-cache
 
 *.log
 *.zip

@@ -1,14 +1,17 @@
 <?php
 
-
 /**
  * Register the CSS
  */
 function app_get_css() {
+$app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
+  ? '_/css/main.css'
+  : '_/css/main-dev.css';
   return array(
     'all'=>array(
       'foundation' => '_/lib/foundation/css/foundation.min.css',
-      'main' => '_/css/main.css'
+      'fontawesome' => '_/lib/fontawesome/css/font-awesome.min.css',
+      'main' => $app_css
     )
   );
 }
@@ -49,6 +52,11 @@ add_action('init', 'app_menus');
 // if ( function_exists( 'add_image_size' ) ) {
 //   add_image_size( 'hero', 680, 450, true ); //(cropped)
 // }
+
+/**
+ * Add support for excerpt
+*/
+add_post_type_support('page', 'excerpt');
 
 
 /**
@@ -185,6 +193,26 @@ add_action('init', function() {
     }
   }
 });
+
+/* This function serves the purpose of including a php template and
+ * be explicit about what vars it injects.
+ * Typically, you would just set the variable above the include, but
+ * doing it that way makes it hard to follow. In a sense, this also serves
+ * another purpose of stopping the ugly html that some functions/methods generate.
+ * @example include_with(__DIR__.'/incl-filename.php', array('foo' => $foo, 'bar' => $bar));
+ */
+function include_with($path, $array_vars, $once=false) {
+  extract($array_vars);
+  if($once) {
+    include_once $path;
+  } else {
+    include $path;
+  }
+  foreach($array_vars as $k => $v) {
+    unset($$k);
+  }
+  return;
+}
 
 // get rid of admin pages we don't need for non admin users
 add_action('admin_menu', 'remove_non_vermilion_admin_menu_items', 999);

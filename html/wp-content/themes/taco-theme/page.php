@@ -1,9 +1,8 @@
 <?php
-
+get_header();
 //setup the page
 $page = \Taco\Post\Factory::create($post);
-
-get_header(); ?>
+?>
 
 on the page
           
