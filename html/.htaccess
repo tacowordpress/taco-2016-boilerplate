@@ -41,6 +41,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
 
 
+# robots.txt
+RewriteRule ^robots\.txt$ /wp-content/themes/taco-theme/templates/tmpl-robots-txt.php [L]
 
 </IfModule>
 
