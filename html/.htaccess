@@ -34,13 +34,6 @@ SetEnvIf REDIRECT_HTTP_BOOTSTRAP_WP (.+) HTTP_BOOTSTRAP_WP=$1
 # typically the vendor dir is never publically accessible
 RewriteRule ^wp-content/themes/taco-theme/app/core/vendor($|/) - [F,L]
 
-RewriteBase /
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-
-
 # robots.txt
 RewriteRule ^robots\.txt$ /wp-content/themes/taco-theme/templates/tmpl-robots-txt.php [L]
 
@@ -89,3 +82,14 @@ AddOutputFilterByType DEFLATE application/x-javascript
   ExpiresByType application/x-font-ttf "access plus 1 year"
   ExpiresDefault "access plus 2 days"
 </ifModule>
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
