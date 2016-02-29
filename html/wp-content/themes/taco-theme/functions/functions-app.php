@@ -69,14 +69,14 @@ function app_image_path($path, $size) {
   // Which image size was requested?
   global $_wp_additional_image_sizes;
   $image_size = $_wp_additional_image_sizes[$size];
-  
+
   // Get the path info
   $pathinfo = pathinfo($path);
   $fname = $pathinfo['basename'];
   $fext = $pathinfo['extension'];
   $dir = $pathinfo['dirname'];
   $fdir = realpath(str_replace('//', '/', ABSPATH.$dir)).'/';
-  
+
   // Filename without any size suffix or extension (e.g. without -144x200.jpg)
   $fname_prefix = preg_replace('/(?:-\d+x\d+)?\.'.$fext.'$/i', '', $fname);
   $out_fname = sprintf(
@@ -86,7 +86,7 @@ function app_image_path($path, $size) {
     $image_size['height'],
     $fext
   );
-  
+
   // See if the file that we're predicting exists
   // If so, we can avoid a call to the database
   $fpath = $fdir.$out_fname;
@@ -97,7 +97,7 @@ function app_image_path($path, $size) {
       $out_fname
     );
   }
-  
+
   // Can't find the file? Figure out the correct path from the database
   global $wpdb;
   $guid = site_url().$dir.'/'.$fname_prefix.'.'.$fext;
@@ -124,7 +124,7 @@ function app_image_path($path, $size) {
       );
     }
   }
-  
+
   // Still nothing? Just return the path given
   return $path;
 }
@@ -152,7 +152,7 @@ function get_asset_path($relative_path) {
  * @return string
  */
 function get_app_icons() {
-  
+
   $app_dir = __DIR__.'/../';
 
   $files = scandir($app_dir.'/_/img/app-icons');
@@ -248,3 +248,9 @@ add_filter('single_template', function() {
   }
   return __DIR__.sprintf('/../singles/single-%s.php', $post->post_type);
 });
+
+// remove unnecessary emoji scripts/styles - https://wordpress.org/support/topic/cant-remove-emoji-detection-script
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('admin_print_scripts', 'print_emoji_detection_script');
+remove_action('wp_print_styles', 'print_emoji_styles');
+remove_action('admin_print_styles', 'print_emoji_styles');
