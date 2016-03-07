@@ -2,29 +2,55 @@
 
 /**
  * Register the CSS
+ * @return array
  */
 function app_get_css() {
-$app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
-  ? '_/css/main.css'
-  : '_/css/main-dev.css';
+  $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
+    ? '_/css/main.css'
+    : '_/css/main-dev.css';
   return array(
-    'all'=>array(
+    'all' => [
       'foundation' => '_/lib/foundation/css/foundation.min.css',
       'fontawesome' => '_/lib/fontawesome/css/font-awesome.min.css',
-      'main' => $app_css
-    )
+      'main' => $app_css,
+    ],
   );
 }
 
 
 /**
+ * Register admin CSS
+ * @return array
+ */
+function app_admin_get_css() {
+  return [
+    'all' => [
+      // 'admin' => '_/css/admin.css',
+    ],
+  ];
+}
+
+
+/**
  * Register the JS
+ * @return array
  */
 function app_get_js() {
-  return array(
-    'jquery'=>'_/lib/jquery/dist/jquery.min.js',
-    'main'=>'_/js/app.js'
-  );
+  return [
+    'jquery' => '_/lib/jquery/dist/jquery.min.js',
+    'main' => '_/js/app.js',
+  ];
+}
+
+
+/**
+ * Register admin JS
+ * @return array
+ */
+function app_admin_get_js() {
+  return [
+    // 'admin' => '_/js/admin-min.js',
+  ];
 }
 
 

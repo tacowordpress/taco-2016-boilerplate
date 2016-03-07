@@ -56,16 +56,23 @@ function app_get_page_title() {
 
 /**
  * Enqueue the CSS
+ * @param bool $is_admin
  */
-function app_enqueue_style() {
-  $styles = app_get_css();
+function app_enqueue_style($is_admin=false) {
+  $styles = ($is_admin)
+    ? app_admin_get_css()
+    : app_get_css();
   if(!Arr::iterable($styles)) return;
   
-  foreach($styles as $media=>$media_styles) {
+  $template_directory = get_template_directory_uri();
+  foreach($styles as $media => $media_styles) {
     if(!Arr::iterable($media_styles)) continue;
     
-    foreach($media_styles as $k=>$media_style) {
-      wp_register_style($k, get_template_directory_uri() . '/' . $media_style, false, THEME_VERSION, $media);
+    foreach($media_styles as $k => $media_style) {
+      $path = (preg_match('/^(https?\:|\/\/)/', $media_style))
+        ? $media_style
+        : $template_directory.'/'.$media_style;
+      wp_register_style($k, $path, false, THEME_VERSION, $media);
       wp_enqueue_style($k);
     }
   }
@@ -74,16 +81,40 @@ function app_enqueue_style() {
 
 /**
  * Enqueue the JS
+ * @param bool $is_admin
+ * @param array $scripts
  */
-function app_enqueue_script() {
-  $scripts = app_get_js();
+function app_enqueue_script($is_admin=false) {
+  $scripts = ($is_admin)
+    ? app_admin_get_js()
+    : app_get_js();
   if(!Arr::iterable($scripts)) return;
   
-  foreach($scripts as $k=>$script) {
-    wp_deregister_script($k);
-    wp_register_script($k, get_template_directory_uri() . '/' . $script, false, THEME_VERSION, true);
-    wp_enqueue_script($k);
+  $template_directory = get_template_directory_uri();
+  foreach($scripts as $key => $script) {
+    $path = (preg_match('/^(https?\:|\/\/)/', $script))
+      ? $script
+      : $template_directory.'/'.$script;
+    wp_deregister_script($key);
+    wp_register_script($key, $path, false, THEME_VERSION, true);
+    wp_enqueue_script($key);
   }
+}
+
+
+/**
+ * Enqueue admin CSS
+ */
+function app_admin_enqueue_style() {
+  app_enqueue_style(true);
+}
+
+
+/**
+ * Enqueue admin JS
+ */
+function app_admin_enqueue_script() {
+  app_enqueue_script(true);
 }
 
 
@@ -93,6 +124,10 @@ function app_enqueue_script() {
 if(!is_admin() && !is_auth_page()) {
   add_action('wp_enqueue_scripts', 'app_enqueue_style', 10);
   add_action('wp_enqueue_scripts', 'app_enqueue_script', 1);
+}
+if(is_admin() && !is_auth_page()) {
+  add_action('admin_enqueue_scripts', 'app_admin_enqueue_style', 10);
+  add_action('admin_enqueue_scripts', 'app_admin_enqueue_script', 1);
 }
 
 
