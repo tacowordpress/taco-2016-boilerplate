@@ -139,3 +139,12 @@ remove_action('admin_print_scripts', 'print_emoji_detection_script');
 remove_action('wp_print_styles', 'print_emoji_styles');
 remove_action('admin_print_styles', 'print_emoji_styles');
 
+
+/**
+ * Disable automatic embedding
+ * @link http://wordpress.stackexchange.com/questions/211701/what-does-wp-embed-min-js-do-in-wordpress-4-4
+ */
+function my_deregister_scripts() {
+  wp_deregister_script('wp-embed');
+}
+add_action('wp_footer', 'my_deregister_scripts');
