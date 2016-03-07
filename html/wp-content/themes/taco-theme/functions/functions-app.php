@@ -243,21 +243,21 @@ function include_with($path, $array_vars, $once=false) {
 // get rid of admin pages we don't need for non admin users
 add_action('admin_menu', 'remove_non_vermilion_admin_menu_items', 999);
 function remove_non_vermilion_admin_menu_items() {
- if(wp_get_current_user()->data->user_login != USER_SUPER_ADMIN) {
-   remove_menu_page('plugins.php');
-   remove_menu_page('edit-comments.php');
-   remove_menu_page('tools.php');
-   remove_menu_page('options-general.php');
-   remove_menu_page('themes.php');
-   remove_menu_page('users.php');
-   remove_action('admin_notices', 'update_nag', 3);
- }
+  if(wp_get_current_user()->data->user_login != USER_SUPER_ADMIN) {
+    remove_menu_page('plugins.php');
+    remove_menu_page('edit-comments.php');
+    remove_menu_page('tools.php');
+    remove_menu_page('options-general.php');
+    remove_menu_page('themes.php');
+    remove_menu_page('users.php');
+    remove_action('admin_notices', 'update_nag', 3);
+  }
 }
 // Because we removed appearance and its sub menus, we need to re-enable menus here
 add_action('admin_menu', 'add_non_vermilion_admin_menu_items', 999);
 function add_non_vermilion_admin_menu_items() {
   if(wp_get_current_user()->data->user_login != USER_SUPER_ADMIN) {
-   add_menu_page( 'Menus', 'Menus', 'manage_options', 'nav-menus.php', '', null, 6);
+    add_menu_page('Menus', 'Menus', 'manage_options', 'nav-menus.php', '', null, 6);
   }
 }
 
