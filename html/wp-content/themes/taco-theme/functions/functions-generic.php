@@ -1,21 +1,5 @@
 <?php
 
-
-/**
-* define excerpt
-*/
-// function get_excerpt($str, $start_pos=0, $max_length=100) {
-//   if(strlen($str) > $max_length) {
-//     $excerpt   = substr($str, $start_pos, $max_length-3);
-//     $last_space = strrpos($excerpt, ' ');
-//     $excerpt   = substr($excerpt, 0, $last_space);
-//     $excerpt  .= '...';
-//   } else {
-//     $excerpt = $str;
-//   }
-//   return strip_tags($excerpt);
-// }
-
 /**
  * Is this the login page?
  * @return bool
@@ -40,7 +24,6 @@ function get_full_url() {
   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
   return $protocol . "://" . $_SERVER['HTTP_HOST'] . $port . $_SERVER['REQUEST_URI'];
 }
-
 
 
 /**
@@ -69,33 +52,6 @@ add_filter('login_headertitle', 'app_login_header_unlink');
 function app_get_page_title() {
   return join(' | ', array_filter(array(wp_title(null, false), get_bloginfo('name')), 'strlen'));
 }
-
-
-/**
- * Removed Comments from the admin nav
- */
-function app_admin_disable_comments() {
-  global $menu;
-  
-  // Use regex to match b/c some items will have numbers suffixed (e.g. Comments 1)
-  $remove_titles = array(
-    '/Comments/i',
-  );
-  $items = array_combine(
-    array_keys($menu),
-    Collection::pluck($menu, 0)
-  );
-  foreach($items as $id=>$title) {
-    foreach($remove_titles as $regex) {
-      if(!preg_match($regex, $title)) continue;
-      
-      unset($menu[$id]);
-      break;
-    }
-    if(!array_key_exists($id, $menu)) continue;
-  }
-}
-add_action('admin_menu', 'app_admin_disable_comments');
 
 
 /**
