@@ -248,9 +248,3 @@ add_filter('single_template', function() {
   }
   return __DIR__.sprintf('/../singles/single-%s.php', $post->post_type);
 });
-
-// remove unnecessary emoji scripts/styles - https://wordpress.org/support/topic/cant-remove-emoji-detection-script
-remove_action('wp_head', 'print_emoji_detection_script', 7);
-remove_action('admin_print_scripts', 'print_emoji_detection_script');
-remove_action('wp_print_styles', 'print_emoji_styles');
-remove_action('admin_print_styles', 'print_emoji_styles');
