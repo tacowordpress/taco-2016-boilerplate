@@ -276,6 +276,113 @@ add_filter('single_template', function() {
 });
 
 
+/**
+ * Get edit link when admin is logged in
+ * @param int $id (post ID or term ID)
+ * @param string $edit_type (post type or taxonomy slug)
+ * @param string $label (optional admin-facing name for $edit_type)
+ * @param bool $display_inline (omit wrapping paragraph)
+ * @return string (HTML)
+ */
+function get_edit_link($id=null, $edit_type='post', $label=null, $display_inline=false) {
+  if(!(is_user_logged_in() && current_user_can('manage_options'))) return null;
+  
+  $link_class = 'class="front-end-edit-link"';
+  $link_tag = ($display_inline) ? 'span' : 'p';
+  if(is_null($label)) {
+    $label = Str::human(str_replace('-', ' ', $edit_type));
+  }
+  $subclasses = \Taco\Post\Loader::getSubclasses();
+  $subclasses_machine = array_map(function($el){
+    $el = substr($el, strrpos($el, '\\'));
+    $el = Str::camelToHuman($el);
+    $el = Str::machine($el, '-');
+    return $el;
+  }, $subclasses);
+  if(in_array($edit_type, $subclasses_machine)) {
+    // Edit post or display list of posts of this type
+    $post_type_link = (!is_null($id))
+      ? get_edit_post_link($id)
+      : '/wp-admin/edit.php?post_type='.$edit_type;
+    return sprintf(
+      '<%s %s><a href="%s">Edit %s</a></%s>',
+      $link_tag,
+      $link_class,
+      $post_type_link,
+      $label,
+      $link_tag
+    );
+  }
+  
+  // Find an applicable post type for editing a custom term
+  $post_type = null;
+  $post_types_by_taxonomy = [];
+  foreach($subclasses as $subclass) {
+    if(strpos($subclass, '\\') !== false) {
+      $subclass = '\\'.$subclass;
+    }
+    $taxonomies = \Taco\Post\Factory::create($subclass)->getTaxonomies();
+    if(Arr::iterable($taxonomies)) {
+      foreach($taxonomies as $key => $taxonomy) {
+        $taxonomy_slug = (is_array($taxonomy))
+          ? $key
+          : $taxonomy;
+        $post_types_by_taxonomy[$taxonomy_slug][] = $subclass;
+      }
+    }
+  }
+  $post_types_by_taxonomy = array_unique($post_types_by_taxonomy);
+  if(array_key_exists($edit_type, $post_types_by_taxonomy)) {
+    $post_type = reset($post_types_by_taxonomy[$edit_type]);
+    $post_type = substr($post_type, strrpos($post_type, '\\'));
+    $post_type = Str::camelToHuman($post_type);
+    $post_type = Str::machine($post_type, '-');
+  } else {
+    $post_type = 'post';
+  }
+  
+  if(is_null($id)) {
+    // View taxonomy term list
+    return sprintf(
+      '<%s %s><a href="/wp-admin/edit-tags.php?taxonomy=%s&post_type=%s">View %ss</a></%s>',
+      $link_tag,
+      $link_class,
+      $edit_type,
+      $post_type,
+      $label,
+      $link_tag
+    );
+  }
+  
+  // Edit term
+  return sprintf(
+    '<%s %s><a href="%s">Edit %s</a></%s>',
+    $link_tag,
+    $link_class,
+    get_edit_term_link($id, $edit_type, $post_type),
+    $label,
+    $link_tag
+  );
+}
+
+
+/**
+ * Get App Options link when admin is logged in
+ * @param string $description
+ * @param bool $display_inline
+ * @return type
+ */
+function get_app_options_link($description=null, $display_inline=false) {
+  if(!(is_user_logged_in() && current_user_can('manage_options'))) return null;
+  
+  if(is_null($description)) {
+    $description = 'this';
+  }
+  $options = AppOption::getInstance();
+  return get_edit_link($options->ID, 'app-option', $description.' in '.$options->getPlural(), $display_inline);
+}
+
+
 function add_slug_to_body_class($classes=[]) {
   global $post;
   $file_name = basename($_SERVER['SCRIPT_FILENAME'], '.php');
