@@ -9,6 +9,8 @@ html, body { height: 100%; }
 
 .bottom-edge, .page-wrap:after { height: 1px; line-height: 1px; font-size: 1px; }
 
+.bottom-edge { height: 1px; line-height: 1px; font-size: 1px; content: ""; display: block; }
+
 /* ===== utility classes ===== */
 .center { text-align: center; }
 
