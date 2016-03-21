@@ -19,19 +19,6 @@ function app_get_css() {
 
 
 /**
- * Register admin CSS
- * @return array
- */
-function app_admin_get_css() {
-  return [
-    'all' => [
-      // 'admin' => '_/css/admin.css',
-    ],
-  ];
-}
-
-
-/**
  * Register the JS
  * @return array
  */
@@ -39,6 +26,19 @@ function app_get_js() {
   return [
     'jquery' => '_/lib/jquery/dist/jquery.min.js',
     'main' => '_/js/app.js',
+  ];
+}
+
+
+/**
+ * Register admin CSS
+ * @return array
+ */
+function app_admin_get_css() {
+  return [
+    'all' => [
+      'admin' => '_/css/admin.css',
+    ],
   ];
 }
 

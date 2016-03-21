@@ -1,0 +1,43 @@
+body.wp-admin.post-type-app-option #postdivrich { height: 0; overflow: hidden; }
+
+#normal-sortables textarea.wp-editor-area { min-height: 200px; }
+
+span.required { color: #dd2b00; font-weight: bold; }
+
+#adminmenu div.wp-menu-name { padding-left: 36px; padding-right: 10px; }
+
+#normal-sortables tr td { padding: 12px 0; }
+
+#normal-sortables tr td:first-child { width: 192px; vertical-align: top; }
+
+#normal-sortables p.description { font-size: 13px; color: #888; }
+
+#normal-sortables label:not(.selectit) { position: relative; top: 4px; display: block; margin-right: 14px; line-height: 18px; text-align: right; }
+
+#normal-sortables .checkbox-group label { width: auto; text-align: left; margin-right: 0; }
+
+#normal-sortables input[type="checkbox"], #normal-sortables input[type="radio"], #normal-sortables input[type="checkbox"] + p.description { position: relative; top: 2px; }
+
+#normal-sortables input[type="text"], #normal-sortables input[type="email"], #normal-sortables input[type="color"], #normal-sortables input[type="number"], #normal-sortables textarea { margin: 0; }
+
+#normal-sortables .checkbox-group input[type="checkbox"] { float: left; top: 5px; margin-right: 10px; }
+
+#normal-sortables .addmany-result tr td:first-child { width: 130px; }
+
+table.form-table tr.form-field th:first-child { width: 192px; vertical-align: top; text-align: right; }
+
+table.form-table tr.form-field th:first-child label { display: block; }
+
+body.wp-admin #the-list img.thumbnail, #normal-sortables .upload_field img.thumbnail { max-width: 100px; max-height: 100px; }
+
+#normal-sortables .upload_field input.upload { display: block; margin-bottom: 6px; width: 100%; }
+
+#normal-sortables .upload_field img.thumbnail { margin-right: 0; float: left; }
+
+#normal-sortables .upload_field img.thumbnail + .upload-field-container { margin-left: 110px; }
+
+body.wp-admin[class*="taxonomy-"] table.wp-list-table th.column-description, body.wp-admin[class*="taxonomy-"] table.wp-list-table td.column-description { display: none; }
+
+body.wp-admin[class*="taxonomy-"] table.wp-list-table th.column-slug, body.wp-admin[class*="taxonomy-"] table.wp-list-table td.column-slug { width: auto !important; }
+
+/*# sourceMappingURL=admin.css.map */
