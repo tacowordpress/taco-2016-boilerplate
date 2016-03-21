@@ -400,4 +400,72 @@ trait Taquito  {
       wp_delete_post($id, $force);
     }
   }
+  
+  public function getRelatedPosts($addbysearch_field=null, $number=2) {
+
+    // first check addbysearch fields for when related posts are manually assigned
+    if(!is_null($addbysearch_field) && $this->get($addbysearch_field)) {
+      $related_posts = \AddBySearch\AddBySearch::getPostsFromOrder(
+        $this->get($addbysearch_field)
+      );
+
+      if(Arr::iterable($related_posts)) {
+        $related_posts = array_slice($related_posts, 0, $number);
+        return $related_posts;
+      }
+    }
+
+    // next get posts by related terms
+    $tax_terms = $this->getTerms();
+    if(Arr::iterable($tax_terms)) {
+      $terms_filtered = [];
+      foreach($tax_terms as $tax_name => $terms) {
+        if($tax_name === 'category') continue;
+        foreach($terms as $term) {
+          if($term->get('slug') === 'uncategorized') continue;
+          $terms_filtered[] = $term;
+        }
+      }
+      if(Arr::iterable($terms_filtered)) {
+        $key = array_rand($terms_filtered, 1);
+        $term = $terms_filtered[$key];
+      }
+      
+      if(is_object($term)) {
+        
+        $related = $this->getByTerm(
+          $term->get('taxonomy'),
+          $term->get('slug'),
+          'slug',
+          array('posts_per_page' => $number)
+        );
+
+        if(Arr::iterable($related)) {
+          if(array_key_exists($this->ID, $related)) {
+            unset($related[$this->ID]);
+          }
+          $filtered = [];
+          foreach($related as $r) {
+            if($this->ID == $r->ID) continue;
+            $filtered[] = $r;
+          }
+          if(Arr::iterable($filtered)) {
+            return $filtered;
+          }
+        }
+      }
+      return [];
+      // still nothing?
+      $related = $this->getAll();
+      $keys = array_rand($related, $number);
+      $rand = [];
+      foreach($keys as $k) {
+        $rand[$k] = $related[$k];
+      }
+      if(array_key_exists($this->ID, $rand)) {
+        unset($rand[$this->ID]);
+      }
+      return $rand;
+    }
+  }
 }
