@@ -1,40 +1,46 @@
 body.wp-admin.post-type-app-option #postdivrich { height: 0; overflow: hidden; }
 
-#normal-sortables textarea.wp-editor-area { min-height: 200px; }
+body.wp-admin[class*="taxonomy-"] table.form-table textarea { min-height: 100px; }
 
-span.required { color: #dd2b00; font-weight: bold; }
+body.wp-admin #normal-sortables textarea.wp-editor-area { min-height: 200px; }
 
-#adminmenu div.wp-menu-name { padding-left: 36px; padding-right: 10px; }
+body.wp-admin form#addtag table.form-table th, body.wp-admin form#addtag table.form-table td { display: block; padding: 0; width: auto; text-align: left; }
 
-#normal-sortables tr td { padding: 12px 0; }
+body.wp-admin form#addtag table.form-table th { padding-top: 8px; }
 
-#normal-sortables tr td:first-child { width: 192px; vertical-align: top; }
+body.wp-admin span.required { color: #dd2b00; font-weight: bold; }
 
-#normal-sortables p.description { font-size: 13px; color: #888; }
+body.wp-admin #adminmenu div.wp-menu-name { padding-left: 36px; padding-right: 10px; }
 
-#normal-sortables label:not(.selectit) { position: relative; top: 4px; display: block; margin-right: 14px; line-height: 18px; text-align: right; }
+body.wp-admin #normal-sortables tr td { padding: 12px 0; }
 
-#normal-sortables .checkbox-group label { width: auto; text-align: left; margin-right: 0; }
+body.wp-admin #normal-sortables tr td:first-child { width: 192px; vertical-align: top; }
 
-#normal-sortables input[type="checkbox"], #normal-sortables input[type="radio"], #normal-sortables input[type="checkbox"] + p.description { position: relative; top: 2px; }
+body.wp-admin #normal-sortables p.description { font-size: 13px; color: #888; }
 
-#normal-sortables input[type="text"], #normal-sortables input[type="email"], #normal-sortables input[type="color"], #normal-sortables input[type="number"], #normal-sortables textarea { margin: 0; }
+body.wp-admin #normal-sortables label:not(.selectit) { position: relative; top: 4px; display: block; margin-right: 14px; line-height: 18px; text-align: right; }
 
-#normal-sortables .checkbox-group input[type="checkbox"] { float: left; top: 5px; margin-right: 10px; }
+body.wp-admin #normal-sortables .checkbox-group label { width: auto; text-align: left; margin-right: 0; }
 
-#normal-sortables .addmany-result tr td:first-child { width: 130px; }
+body.wp-admin #normal-sortables input[type="checkbox"], body.wp-admin #normal-sortables input[type="radio"], body.wp-admin #normal-sortables input[type="checkbox"] + p.description { position: relative; top: 2px; }
 
-table.form-table tr.form-field th:first-child { width: 192px; vertical-align: top; text-align: right; }
+body.wp-admin #normal-sortables input[type="text"], body.wp-admin #normal-sortables input[type="email"], body.wp-admin #normal-sortables input[type="color"], body.wp-admin #normal-sortables input[type="number"], body.wp-admin #normal-sortables textarea { margin: 0; }
 
-table.form-table tr.form-field th:first-child label { display: block; }
+body.wp-admin #normal-sortables .checkbox-group input[type="checkbox"] { float: left; top: 5px; margin-right: 10px; }
 
-body.wp-admin #the-list img.thumbnail, #normal-sortables .upload_field img.thumbnail { max-width: 100px; max-height: 100px; }
+body.wp-admin #normal-sortables .addmany-result tr td:first-child { width: 130px; }
 
-#normal-sortables .upload_field input.upload { display: block; margin-bottom: 6px; width: 100%; }
+body.wp-admin table.form-table tr.form-field th:first-child { width: 192px; vertical-align: top; text-align: right; }
 
-#normal-sortables .upload_field img.thumbnail { margin-right: 0; float: left; }
+body.wp-admin table.form-table tr.form-field th:first-child label { display: block; }
 
-#normal-sortables .upload_field img.thumbnail + .upload-field-container { margin-left: 110px; }
+body.wp-admin #the-list img.thumbnail, body.wp-admin #normal-sortables .upload_field img.thumbnail { max-width: 100px; max-height: 100px; }
+
+body.wp-admin #normal-sortables .upload_field input.upload { display: block; margin-bottom: 6px; width: 100%; }
+
+body.wp-admin #normal-sortables .upload_field img.thumbnail { margin-right: 0; float: left; }
+
+body.wp-admin #normal-sortables .upload_field img.thumbnail + .upload-field-container { margin-left: 110px; }
 
 body.wp-admin[class*="taxonomy-"] table.wp-list-table th.column-description, body.wp-admin[class*="taxonomy-"] table.wp-list-table td.column-description { display: none; }
 
