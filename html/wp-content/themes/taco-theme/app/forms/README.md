@@ -299,8 +299,6 @@ A form developed using TacoForm has the data attribute "data-form-status". You c
 
 
 
-More to come...
-
 
 ##### Form Security
 
@@ -318,6 +316,6 @@ Currently there isn't a custom error message for honeypot fields.
 It's probably better not to be obvious about it.
 
 
-
+More to come...
 
 
