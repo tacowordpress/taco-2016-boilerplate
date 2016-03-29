@@ -48,7 +48,9 @@ These are the properties and values (defaults shown below) that can be used to s
       'success_message' => null,
       'error_message' => null,
       'success_redirect_url' => null,
-      'label_field_wrapper' => 'TacoForm::rowColumnWrap'
+      'label_field_wrapper' => 'TacoForm::rowColumnWrap',
+      'use_honeypot' => true,
+      'honeypot_field_name' => 'your_website_url'
     );
 ```
 Details on what each property/value does is coming soon.
@@ -298,6 +300,22 @@ A form developed using TacoForm has the data attribute "data-form-status". You c
 
 
 More to come...
+
+
+##### Form Security
+
+TacoForms has backend validation, but if you needed some extra help, you can use the honeypot option.
+In your settings just pass this in:
+
+```php
+    array(
+      ...
+      'use_honeypot' => true,
+      'honeypot_field_name' => 'your_website_url'
+    );
+```
+Currently there isn't a custom error message for honeypot fields.
+It's probably better not to be obvious about it.
 
 
 
