@@ -1,0 +1,165 @@
+body.wp-admin {
+  $admin_blue_dark: #21759b;
+  $admin_blue_light: #2ea2cc;
+  $admin_thumbnail_size: 100px;
+  
+  // Hide main content editor on App Options
+  // (it still needs to be there to allow wysiwyg editors to work for meta fields)
+  &.post-type-app-option {
+    #postdivrich {
+      height: 0;
+      overflow: hidden;
+    }
+  }
+  
+  // Make textarea and wysiwyg meta fields taller
+  &[class*="taxonomy-"] {
+    table.form-table {
+      textarea {
+        min-height: 100px;
+      }
+    }
+  }
+  #normal-sortables {
+    textarea.wp-editor-area {
+      min-height: 200px;
+    }
+  }
+  
+  // Fix display of meta fields table on taxonomy page
+  form#addtag {
+    table.form-table {
+      th, td {
+        display: block;
+        padding: 0;
+        width: auto;
+        text-align: left;
+      }
+      th {
+        padding-top: 8px;
+      }
+    }
+  }
+  
+  // Make required fields more obvious
+  span.required {
+    color: #dd2b00;
+    font-weight: bold;
+  }
+  
+  // Add padding to sidebar nav
+  #adminmenu div.wp-menu-name {
+    padding-left: 36px;
+    padding-right: 10px;
+  }
+  
+  // Make meta fields easier to read
+  #normal-sortables {
+    tr td {
+      padding: 12px 0;
+      &:first-child {
+        width: 192px;
+        vertical-align: top;
+      }
+    }
+    p.description {
+      font-size: 13px;
+      color: #888;
+    }
+    label:not(.selectit) {
+      position: relative;
+      top: 4px;
+      display: block;
+      margin-right: 14px;
+      line-height: 18px;
+      text-align: right;
+    }
+    .checkbox-group label {
+      width: auto;
+      text-align: left;
+      margin-right: 0;
+    }
+    input[type="checkbox"],
+    input[type="radio"],
+    input[type="checkbox"] + p.description {
+      position: relative;
+      top: 2px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="color"],
+    input[type="number"],
+    textarea {
+      margin: 0;
+    }
+    .checkbox-group input[type="checkbox"] {
+      float: left;
+      top: 5px;
+      margin-right: 10px;
+    }
+    .addmany-result {
+      tr td {
+        &:first-child {
+          width: 130px;
+        }
+      }
+    }
+  }
+  
+  // Field labels on taxonomy term edit page
+  table.form-table tr.form-field th:first-child {
+    width: 192px;
+    vertical-align: top;
+    text-align: right;
+    label {
+      display: block;
+    }
+  }
+  
+  // Hide standard "Description" field on term edit page, in favor of implementing
+  // a more intentional textarea with a specific description underneath
+  // form#addtag .form-field.term-description-wrap,
+  // table.form-table tr.form-field.term-description-wrap {
+  //   display: none;
+  // }
+  
+  // Prevent large images from wrecking post list and edit page
+  #the-list,
+  #normal-sortables .upload_field {
+    img.thumbnail {
+      max-width: $admin_thumbnail_size;
+      max-height: $admin_thumbnail_size;
+    }
+  }
+  
+  #normal-sortables .upload_field {
+    // Use full width for file and image uploads
+    input.upload {
+      display: block;
+      margin-bottom: 6px;
+      width: 100%;
+    }
+    
+    // Place thumbnail next to image field
+    img.thumbnail {
+      margin-right: 0;
+      float: left;
+      + .upload-field-container {
+        margin-left: ($admin_thumbnail_size + 10px);
+      }
+    }
+  }
+  
+  // Hide description column from term list on taxonomy page
+  &[class*="taxonomy-"] table.wp-list-table {
+    th, td {
+      &.column-description {
+        display: none;
+      }
+      &.column-slug {
+        width: auto !important;
+      }
+    }
+  }
+  
+}
