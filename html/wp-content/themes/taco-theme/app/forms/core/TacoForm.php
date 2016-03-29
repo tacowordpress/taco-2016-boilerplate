@@ -8,7 +8,7 @@ class TacoForm {
   use FormValidators;
 
   private $settings = [];
-  
+
   public static $invalid = false;
   public static $success = false;
   public static $session_field_errors = array();
@@ -42,18 +42,20 @@ class TacoForm {
       'method' => 'post',
       'action' => null,
       'novalidate' => false,
-      'use_ajax' => false,
+      // 'use_ajax' => false,
       'hide_labels' => false,
       'column_classes' => 'small-12 columns',
       'exclude_post_content' => false,
-      'use_cache' => false, // todo: needs development
+      // 'use_cache' => false, // todo: needs development
       'lock' => false, // prevent saving dev settings
       'submit_button_text' => 'submit',
       'success_message' => null,
       'error_message' => null,
       'success_redirect_url' => null,
       'label_field_wrapper' => 'TacoForm::rowColumnWrap',
-      'on_success' => null, // on success event callback
+      'on_success' => null, // on success event callback,
+      'use_honeypot' => false,
+      'honeypot_field_name' => 'your_webite_url'
     );
 
     // we need this to uniquely identify the form conf that will get created or loaded
@@ -143,7 +145,7 @@ class TacoForm {
     }
 
     // --- messages ---
-    
+
     // first get global default messages
     $defaults['success_message'] = $global_defaults['success_message'];
     $defaults['error_message'] = $global_defaults['error_message'];
@@ -169,6 +171,7 @@ class TacoForm {
       );
     }
 
+
     // merge default settings with user settings
     $this->settings = array_merge(
       $defaults,
@@ -185,10 +188,10 @@ class TacoForm {
       }
       $this->settings['label_field_wrapper'] = $wrapper_callable;
     }
-    
+
     // assign post title to instance
     $this->conf_instance->set('post_title', $this->get('conf_name'));
-    
+
     if($this->settings['fields'] !== 'auto') {
       $this->conf_instance->set('fields', serialize($this->fields));
     }
@@ -216,6 +219,12 @@ class TacoForm {
     $this->conf_machine_name = \AppLibrary\Str::machine(
       $this->get('conf_name'),
       '-'
+    );
+
+    $this->conf_instance->assign([
+        'use_honeypot' => $this->settings['use_honeypot'],
+        'honeypot_field_name' => $this->settings['honeypot_field_name']
+      ]
     );
 
     $this->conf_instance->set(
@@ -293,9 +302,9 @@ class TacoForm {
     if(!($callback !== null && is_callable($callback))) {
       throw new Exception('$callback must be a valid callback');
     }
-    
+
     $html_template = null;
-   
+
     ob_start();
       $callback($this->conf_instance);
     $html_template = ob_get_clean();
@@ -330,7 +339,7 @@ class TacoForm {
     $this->fields = $fields_raw;
     $this->conf_instance->set('fields', serialize($fields_raw));
     $this->conf_instance->save();
-    
+
     return $this->convertToPropperTemplate(
       $html_template
     );
@@ -350,7 +359,7 @@ class TacoForm {
       array_filter($replacements[1])
     );
     $originals = $originals[0];
-    
+
     $new_html = $html_template;
     $inc = 0;
     foreach($originals as $o) {
@@ -428,6 +437,10 @@ class TacoForm {
       $html[] = '<input type="hidden" name="use_ajax" value="1">';
     }
 
+    if($this->settings['use_honeypot']) {
+      $html[] = $this->renderHoneyPotField();
+    }
+
     // wrap with row and columns (foundation)
     if(!$this->settings['exclude_post_content'] && !$using_custom) {
       $html[] = $this->settings['label_field_wrapper'](
@@ -444,7 +457,7 @@ class TacoForm {
       );
       $this->renderMessages();
     }
-    
+
     return join('', $html);
   }
 
@@ -467,10 +480,10 @@ class TacoForm {
    * @return string html
    */
   public function renderFormFields($return_as_array=false) {
-    
+
     $html = [];
     foreach($this->fields as $k => $v) {
-      
+
       if(array_key_exists('id', $v)) {
         $id = $v['id'];
       } else {
@@ -481,7 +494,7 @@ class TacoForm {
       $hidden_class = ($this->hide_labels)
         ? 'hide_label'
         : '';
-      
+
       // does this field have an error
       $has_error = self::hasError($k);
       $error_columns_class = ($has_error)
@@ -513,7 +526,7 @@ class TacoForm {
         && !array_key_exists('placeholder', $v)) {
         $v['placeholder'] = \AppLibrary\Str::human($k);
       }
-      
+
       $html[$k] = $this->settings['label_field_wrapper'](
         self::renderFieldErrors($k)
         .' '.$label.' '
@@ -545,12 +558,25 @@ class TacoForm {
 
 
   /**
+   * render a honey pot field
+   * @return string
+   */
+  private function renderHoneyPotField() {
+    return sprintf(
+      '<style>input[name="%s"]{display:none;}</style><input type="text" name="%s">',
+      $this->settings['honeypot_field_name'],
+      $this->settings['honeypot_field_name']
+    );
+  }
+
+
+  /**
    * get a custom form rendering defined by an html callback
    * @param $callback callable
    * @return boolean
    */
   private function renderCustom($callback) {
-    
+
     $html = [];
     $html[] = $this->renderFormHead(true);
     $rendered_fields = $this->renderFormFields(true);
@@ -559,7 +585,7 @@ class TacoForm {
     $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
     $rendered_fields['edit_link'] = $this->renderFormEditLink();
     $rendered_fields['form_messages'] = $this->renderMessages();
-    
+
     // render the custom template
     FormTemplate::create(
       array($rendered_fields),
@@ -685,6 +711,15 @@ class TacoForm {
     $invalid_array = [];
     $fields = unserialize(unserialize($form_config->get('fields')));
 
+
+    if(
+      $form_config->get('use_honeypot')
+      && array_key_exists($form_config->get('honeypot_field_name'), $_POST)
+    ) {
+      $fields['honeypot'] = [];
+      $source_fields['honeypot'] = $_POST[$form_config->get('honeypot_field_name')];
+    }
+
     foreach($fields as $k => $v) {
       $validation_types  = [];
 
@@ -708,6 +743,10 @@ class TacoForm {
       if(array_key_exists('maxlength', $v)) {
         $validation_types['checkMaxLength'] = $v['maxlength'];
       }
+      if($form_config->get('use_honeypot') && $k === 'honeypot') {
+        $validation_types['checkHoneyPot'] = 1;
+      }
+
       if(\AppLibrary\Arr::iterable($validation_types)) {
         list($invalid, $errors) = self::validateFieldRequirements(
           $validation_types,
