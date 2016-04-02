@@ -1,9 +1,10 @@
 <?php
 
 class FormConfBase extends \Taco\Post {
-  
+
   public function getFields() {
     return array(
+      'unique_id' => ['type' => 'text'],
       'fields' => array('type' => 'hidden'),
       'form_description' => array('type' => 'textarea'),
       'do_not_track_anything' => array(
