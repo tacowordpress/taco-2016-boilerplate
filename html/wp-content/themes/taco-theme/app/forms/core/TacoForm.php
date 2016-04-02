@@ -67,10 +67,12 @@ class TacoForm {
 
     // if the form configuration exists, load it
     $db_conf = $this->findFormConfigInstance($args['conf_name']);
+    
     if($db_conf) {
       $this->conf_instance = $db_conf;
     } else {
       $this->conf_instance = new FormConfig;
+      $this->conf_instance->set('unique_id', md5($args['conf_name']));
     }
 
     $conf_fields = $this->conf_instance->getFields();
@@ -284,7 +286,7 @@ class TacoForm {
    */
   private function findFormConfigInstance($conf_name) {
     $db_instance = FormConfig::getOneBy(
-      'post_name', \AppLibrary\Str::machine($conf_name, '-')
+      'unique_id', md5($conf_name)
     );
     if(\AppLibrary\Obj::iterable($db_instance)) {
       return $db_instance;
