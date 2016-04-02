@@ -3,7 +3,7 @@
 
 class FormEntry extends \Taco\Post {
   use Taquito;
-  
+
   public $form_config_id = null;
   public $form_config = null;
 
@@ -11,8 +11,12 @@ class FormEntry extends \Taco\Post {
     $fields = array(
       'form_config' => array(
         'type' => 'select',
-        'options' => self::getFormConfigs()
-      )
+        'options' => self::getFormConfigs(),
+      ),
+      'captured_data' => [
+        'type' => 'hidden',
+        'readonly' => true
+      ]
     );
     $form_conf_fields = self::getFieldsFromFormEntryConf();
     return array_merge(
@@ -36,7 +40,7 @@ class FormEntry extends \Taco\Post {
 
 
   public function getFieldsFromFormEntryConf() {
-    
+
     $this->loadFormConfig();
     $form_config = $this->form_config;
 
@@ -55,7 +59,7 @@ class FormEntry extends \Taco\Post {
     $form_config = FormConfig::find($_POST['form_config']);
     if(!\AppLibrary\Obj::iterable($form_config)) return false;
     $is_valid = TacoForm::validate($fields, $form_config);
-    
+
     $use_ajax = (array_key_exists('use_ajax', $_POST))
       ? true
       : false;
@@ -77,8 +81,18 @@ class FormEntry extends \Taco\Post {
 
   public function save() {
     TacoForm::setSuccess();
+    $fields = $this->getFields();
+    $captured_data = [];
+    foreach($fields as $k => $v) {
+      if($k === 'captured_data' || $k === 'form_config') continue;
+      $captured_data[$k] = $this->get($k);
+    }
+    $form_config = FormConfig::find($this->get('form_config'));
+    $captured_data['form_configuration'] = $form_config->get('post_title');
+    $this->set('captured_data', json_encode($captured_data));
     return parent::save();
   }
+
 
   public function getURLAfterSuccess() {
     if($this->form_config && $this->form_config->get('success_redirect_url')) {
@@ -89,8 +103,7 @@ class FormEntry extends \Taco\Post {
     header(sprintf('Location: %s', $url));
     exit;
   }
-
-
+  
   public static function getFormConfigs() {
     return FormConfig::getPairs();
   }
