@@ -34,7 +34,7 @@ These are the properties and values (defaults shown below) that can be used to s
 
     array(
       'conf_name' => '',
-      'fields' => array(), 
+      'fields' => array(),
       'css_class' => '',
       'id' => '',
       'method' => 'post',
@@ -58,9 +58,9 @@ Details on what each property/value does is coming soon.
 ## Customizing how the form gets rendered
 The simplicity of TacoForms doesn't stop with the above. Custom rendering of a form is also a breeze and comes with a few different options.
 
-##### Example 1 
+##### Example 1
 ```php
-<?php 
+<?php
 
 echo (new TacoForm(
   array(
@@ -73,25 +73,25 @@ echo (new TacoForm(
     ),
   )
 ))->render(function($form_conf) { ?>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %first_name%
     </div>
   </div>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %email%
     </div>
   </div>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %message%
     </div>
   </div>
-  
+
    <div class="row">
     <div class="small-12 columns">
       <button type="submit">Submit</button>
@@ -103,10 +103,10 @@ echo (new TacoForm(
       %edit_link%
     </div>
   </div>
-  
+
 <?php }); ?>
 ```
-Example 1 shows how easy it is to use your own template with HTML and template tags. 
+Example 1 shows how easy it is to use your own template with HTML and template tags.
 Using %my_field_name% will render that field according to the configuration settings. Let's say you wanted to hide the labels for fields and use placeholders instead. In your config settings just set `"hide_labels" => true`.
 You will notice "%edit_link%" in the example above. This renders a link to the WordPress admin, where client admin can go to the configuration to edit fields like success/error messages and admin emails.
 
@@ -115,7 +115,7 @@ You will notice "%edit_link%" in the example above. This renders a link to the W
 The below example demonstrates a few things: customizing the form's general success/error messages and the position of them. Note: The WordPress admin can override these fields and that's done by design.
 
 ```php
-<?php 
+<?php
 
 echo (new TacoForm(
   array(
@@ -129,28 +129,28 @@ echo (new TacoForm(
       'email' => array('type' => 'email'),
       'message' => array('type' => 'textarea')
     ),
-    
+
   )
 ))->render(function($form_conf) { ?>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %form_messages% //This is where success or error messages will print
     </div>
   </div>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %first_name%
     </div>
   </div>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %last_name%
     </div>
   </div>
-  
+
   <div class="row">
     <div class="small-12 columns">
       %email%
@@ -162,21 +162,20 @@ echo (new TacoForm(
       %message%
     </div>
   </div>
-  
+
   <div class="row">
     <div class="small-12 columns">
       <button type="submit">Submit</button>
     </div>
   </div>
-  
-  
+
+
 <?php }); ?>
 ```
 
 ##### Why is the template syntax atypical?
-You will notice how you close php to start defining your custom template. If you've been using php for a bit you might have guessed that I'm using output buffering to capture the html and replace %template_tags% with rendered html. This happens behind the scenes. In my very humble opinion, if you get passed the weirdness, it's a very elegant way to customize.
+You will notice how you close php to start defining your custom template. If you've been using php for a bit you might have guessed that I'm using output buffering to capture the html and replace %template_tags% with rendered html. This happens behind the scenes. In my very humble opinion, *if you can get past the weirdness, it's a very elegant way to customize*.
 
-##### If you can get passed the weirdness you will really like this! 
 
 ```php
 
@@ -189,7 +188,7 @@ You will notice how you close php to start defining your custom template. If you
 
 <?php
 echo $contact_form->render(function($form_conf) { ?>
-  
+
   <div class="row">
     <div class="small-12 medium-8 medium-centered columns">
       %post_content%
@@ -250,7 +249,7 @@ $my_contact_form = new TacoForm(
   array(
     'conf_name' => 'contact form configuration',
     'on_success' => function($entry_object, $form_conf) {
-    
+
       // send mail on the form's success
       $to = 'info@yourwebsite.com';
       $subject = 'A message from the site\'s general contact form';
@@ -317,5 +316,3 @@ It's probably better not to be obvious about it.
 
 
 More to come...
-
-
