@@ -11,7 +11,7 @@ class FormConfig extends FormConfBase {
     return true;
   }
 
-  public function excludeFromSearch() {
+  public function getExcludeFromSearch() {
     return true;
   }
 }
