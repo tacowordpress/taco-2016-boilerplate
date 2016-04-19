@@ -116,7 +116,7 @@ class FormEntry extends \Taco\Post {
     return 'Form Entries';
   }
 
-  public function excludeFromSearch() {
+  public function getExcludeFromSearch() {
     return true;
   }
 
