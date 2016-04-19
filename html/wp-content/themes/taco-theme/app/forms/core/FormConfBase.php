@@ -28,7 +28,7 @@ class FormConfBase extends \Taco\Post {
     return false;
   }
 
-  public function excludeFromSearch() {
+  public function getExcludeFromSearch() {
     return true;
   }
 
