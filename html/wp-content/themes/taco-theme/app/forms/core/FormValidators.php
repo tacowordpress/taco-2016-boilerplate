@@ -51,6 +51,17 @@ trait FormValidators {
 
 
   /**
+   * check if the honeypot field has a value
+   * @param  $value string
+   * @return $property_value string
+   */
+  public static function checkHoneyPot($value, $property_value=null) {
+    if(strlen($value)) return true;
+    return false;
+  }
+
+
+  /**
    * check if the value doesn't exceed a certain maxlength
    * @param  $value string
    * @return $property_value string
