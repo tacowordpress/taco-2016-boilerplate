@@ -41,13 +41,13 @@ grunt.initConfig({
       },
       semicolons: true
     },
-    files: {
+    files: [{
       src: '_/js/modules/*.js',  // source files mask
       dest: '_/js/min/',    // destination folder
       expand: true,    // allow dynamic building
       flatten: true,   // remove all unnecessary nesting
       ext: '.min.js'   // replace .js to .min.js
-    }
+    }]
   },
     
   watch: {
