@@ -24,7 +24,7 @@ trait FormValidators {
 
 
   /**
-   * check if a field value is a valid email
+   * check if a field value is a valid email with "filter_var" and domain using "checkdnsrr"
    * @param  $value string
    * @return $property_value string
    */
@@ -32,6 +32,11 @@ trait FormValidators {
     if(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
       return true;
     }
+    $email_domain = array_pop(explode("@", $value));
+    if(!checkdnsrr($email_domain, 'MX')) {
+      return true;
+    }
+
     return false;
   }
 
