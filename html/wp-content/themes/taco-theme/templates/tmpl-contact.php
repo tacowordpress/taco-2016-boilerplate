@@ -30,7 +30,6 @@ $app_option = AppOption::getInstance();
 </div><?php // end contact info ?>
 
 <div class="contact-form">
-  <style>.hide_label { display: none; }</style>
   <?php $contact_form = new TacoForm(
     array(
       'conf_name' => 'Contact Form Configuration',
