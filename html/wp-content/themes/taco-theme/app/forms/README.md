@@ -332,7 +332,7 @@ You can do this.
 ```
 
 ###### Fields custom (not auto)
-Maybe you don't want any of the %% template syntax and just want to do you own thing. Be our guest. You can type
+Maybe you don't want any of the %% template syntax and just want to do your own thing. Be our guest. You can type
 the form fields out how you would normally do it. Just keep the field names the same as the configuration.
 
 
