@@ -20,6 +20,12 @@ class FormConfBase extends \Taco\Post {
       ),
       'on_success' => array(
         'type' => 'hidden'
+      ),
+      'use_honeypot' => array(
+        'type' => 'hidden'
+      ),
+      'honeypot_field_name' => array(
+        'type' => 'hidden'
       )
     );
   }
