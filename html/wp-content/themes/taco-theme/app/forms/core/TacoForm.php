@@ -42,11 +42,11 @@ class TacoForm {
       'method' => 'post',
       'action' => null,
       'novalidate' => false,
-      // 'use_ajax' => false,
+      // 'use_ajax' => false, coming soon
       'hide_labels' => false,
       'column_classes' => 'small-12 columns',
       'exclude_post_content' => false,
-      // 'use_cache' => false, // todo: needs development
+      // 'use_cache' => false, // coming soon
       'lock' => false, // prevent saving dev settings
       'submit_button_text' => 'submit',
       'success_message' => null,
@@ -55,7 +55,8 @@ class TacoForm {
       'label_field_wrapper' => 'TacoForm::rowColumnWrap',
       'on_success' => null, // on success event callback,
       'use_honeypot' => false,
-      'honeypot_field_name' => 'your_webite_url'
+      'honeypot_field_name' => 'your_webite_url',
+      'test_with_fakes' => false, // coming soon
     );
 
     // we need this to uniquely identify the form conf that will get created or loaded
@@ -67,7 +68,7 @@ class TacoForm {
 
     // if the form configuration exists, load it
     $db_conf = $this->findFormConfigInstance($args['conf_name']);
-    
+
     if($db_conf) {
       $this->conf_instance = $db_conf;
     } else {
@@ -224,10 +225,9 @@ class TacoForm {
     );
 
     $this->conf_instance->assign([
-        'use_honeypot' => $this->settings['use_honeypot'],
-        'honeypot_field_name' => $this->settings['honeypot_field_name']
-      ]
-    );
+      'use_honeypot' => $this->settings['use_honeypot'],
+      'honeypot_field_name' => $this->settings['honeypot_field_name']
+    ]);
 
     $this->conf_instance->set(
       'post_name',
@@ -302,13 +302,13 @@ class TacoForm {
    */
   public function getFieldsAutomatically($callback) {
     if(!($callback !== null && is_callable($callback))) {
-      throw new Exception('$callback must be a valid callback');
+      throw new Exception('"$callback" must be a valid callback');
     }
 
     $html_template = null;
 
     ob_start();
-      $callback($this->conf_instance);
+    $callback($this->conf_instance);
     $html_template = ob_get_clean();
 
     preg_match_all('/\%(.*)\%/', $html_template, $parts);
@@ -387,7 +387,7 @@ class TacoForm {
       $callback = $this->getFieldsAutomatically($callback);
     }
     if($callback !== null && is_callable($callback)) {
-      return $this->renderCustom($callback);
+      return $this->renderCustom($callback, self::$session_field_values);
     }
     $html = [];
     $html[] = $this->renderFormHead();
@@ -451,6 +451,11 @@ class TacoForm {
       );
     }
 
+    $messages = [];
+    if(strlen($this->get('error_message'))) {
+      $messages['error_message'] = $this->get('error_message');
+    }
+
     //get form messages
     if(!$using_custom) {
       $html[] = $this->settings['label_field_wrapper'](
@@ -485,7 +490,6 @@ class TacoForm {
 
     $html = [];
     foreach($this->fields as $k => $v) {
-
       if(array_key_exists('id', $v)) {
         $id = $v['id'];
       } else {
@@ -517,16 +521,25 @@ class TacoForm {
         continue;
       }
 
+
+      $label_string = (array_key_exists('label', $v))
+        ? $v['label']
+        : $k;
+
       $label = sprintf(
         '<label for="%s" class="%s">%s</label>',
         $id,
         $hidden_class,
-        \AppLibrary\Str::human($k)
+        \AppLibrary\Str::human($label_string)
       );
 
       if($this->get('hide_labels')
         && !array_key_exists('placeholder', $v)) {
         $v['placeholder'] = \AppLibrary\Str::human($k);
+      }
+
+      if(array_key_exists('label', $v) && $v['label'] == 'false') {
+          $label = '';
       }
 
       $html[$k] = $this->settings['label_field_wrapper'](
@@ -572,13 +585,44 @@ class TacoForm {
   }
 
 
+
+  /**
+   * Get an array of field key => value (specifically for custom rendering of values)
+   * @param $field_values array
+   * @return array
+   */
+  private function getFieldValuesOfCustomRendered($field_values) {
+    $fields = [];
+    foreach($this->fields as $k => $v) {
+      $value = (array_key_exists($k, $field_values))
+        ? $field_values[$k]
+        : '';
+      $fields['value_'.$k.''] = $value;
+    }
+    return $fields;
+  }
+
+
+  /**
+   * Get an array of field key => error (specifically for custom rendering of errors)
+   * @return array
+   */
+  private function getFieldErrorsOfCustomRendered() {
+    $fields = [];
+    foreach($this->fields as $k => $v) {
+      $fields['error_'.$k.''] = self::renderFieldErrors($k);
+      $fields['class_field_error_'.$k.''] = (self::renderFieldErrors($k)) ? 'taco-field-error' : '';
+    }
+    return $fields;
+  }
+
+
   /**
    * get a custom form rendering defined by an html callback
    * @param $callback callable
    * @return boolean
    */
-  private function renderCustom($callback) {
-
+  private function renderCustom($callback, $field_values) {
     $html = [];
     $html[] = $this->renderFormHead(true);
     $rendered_fields = $this->renderFormFields(true);
@@ -587,6 +631,12 @@ class TacoForm {
     $rendered_fields['post_content'] = $this->conf_instance->getTheContent();
     $rendered_fields['edit_link'] = $this->renderFormEditLink();
     $rendered_fields['form_messages'] = $this->renderMessages();
+
+    $rendered_fields = array_merge(
+      $rendered_fields,
+      $this->getFieldValuesOfCustomRendered($field_values),
+      $this->getFieldErrorsOfCustomRendered()
+    );
 
     // render the custom template
     FormTemplate::create(
@@ -707,13 +757,12 @@ class TacoForm {
    * @return boolean
    */
   public static function validate($source_fields, $form_config) {
+
     if(array_key_exists('form_config', $source_fields)) {
       unset($source_fields['form_config']);
     }
     $invalid_array = [];
     $fields = unserialize(unserialize($form_config->get('fields')));
-
-
     if(
       $form_config->get('use_honeypot')
       && array_key_exists($form_config->get('honeypot_field_name'), $_POST)
