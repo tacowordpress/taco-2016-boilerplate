@@ -12,7 +12,7 @@ if(array_key_exists('taco_form_submission', $_POST)
 
 
 class FormSubmit {
-    
+
   public static $record = null;
   public static $form_conf_id;
 
@@ -69,7 +69,7 @@ class FormSubmit {
     $redirect_url = method_exists($record, 'getURLAfterSuccess')
       ? $record->getURLAfterSuccess()
       : $record->getPermalink();
-    
+
     if(!$redirect_url) $redirect_url = '/';
 
     header(sprintf('Location: %s', $redirect_url));
@@ -98,6 +98,7 @@ class FormSubmit {
   public static function checkSubmission() {
     // Toggle to $_GET for easy debugging locally
     $source = $_POST;
+
     // Verify we're using a valid Taco class
     if(!self::isTaco($source)) return false;
 
@@ -116,11 +117,11 @@ class FormSubmit {
     if(array_key_exists('form_config', $source)){
       $record->form_config_id = $source['form_config'];
     }
-    
+
     $validated = self::validateInput($record, $source);
     if(!$validated) return false;
     $record_info = $validated;
-    
+
     // Assign info and save
     $record->assign($record_info);
 

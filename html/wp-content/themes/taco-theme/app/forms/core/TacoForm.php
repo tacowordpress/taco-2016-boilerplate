@@ -562,7 +562,7 @@ class TacoForm {
    * @return string html
    */
   public function renderFieldErrors($key) {
-    if(array_key_exists($key, self::$session_field_errors)) {
+    if(array_key_exists($key, self::$session_field_errors) && strlen(self::$session_field_errors[$key])) {
       return sprintf(
         '<span class="taco-field-error-message">%s</span>',
         self::$session_field_errors[$key]

@@ -315,4 +315,76 @@ Currently there isn't a custom error message for honeypot fields.
 It's probably better not to be obvious about it.
 
 
+##### Further Customization
+###### Fields auto
+When fields are defined and rendered automatically, there may be instances where you still need to override certain elements.
+
+```html
+%email|type=textarea|required=true%
+```
+What if you wanted to customize the label that renders automatically?
+You can do this.
+
+```html
+%email|type|label=false% // don't show it
+// or
+%email|type|label=email (required)% // to customize the text
+```
+
+###### Fields custom (not auto)
+Maybe you don't want any of the %% template syntax and just want to do you own thing. Be our guest. You can type
+the form fields out how you would normally do it. Just keep the field names the same as the configuration.
+
+
+```php
+<?php
+
+echo (new TacoForm(
+  array(
+    'conf_name' => 'General Contact Form Configuration',
+      'first_name' => array('type' => 'text', 'required' => true),
+      'last_name' => array(),
+      'email' => array('type' => 'email', 'required' => true),
+      'message' => array('type' => 'textarea', 'required' => true)
+    ),
+  )
+))->render(function($form_conf) { ?>
+
+  ...
+
+  <div class="row">
+    <div class="small-12 columns">
+      %error_first_name%
+      <label for="first-name">first name *</label>
+      <input type="text" name="first_name" id="first-name" value="%value_first_name%">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <label for="last-name">last name</label>
+      <input type="text" name="last_name" id="last-name" value="%value_last_name%">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      %error_email%
+      <label for="email">email</label>
+      <input type="text" name="email" id="email" value="%value_email%">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      %error_message%
+      <label for="message">message</label>
+      <input type="text" name="message" id="message" value="%value_message%">
+    </div>
+  </div>
+
+  ...
+```
+
+
 More to come...
