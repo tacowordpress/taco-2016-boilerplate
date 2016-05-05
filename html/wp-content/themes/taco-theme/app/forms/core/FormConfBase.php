@@ -10,7 +10,7 @@ class FormConfBase extends \Taco\Post {
       'admin_emails' => array('type' => 'text'),
       'success_redirect_url' => array(
         'type' => 'url',
-        'description' => 'If this field is filled out, the user will not see the sucess message and instead will be directed to the url specified'
+        'description' => 'If this field is filled out, the user will not see the success message and instead will be directed to the url specified'
       ),
       'form_success_message' => array(
         'type' => 'textarea',
