@@ -11,6 +11,7 @@ After the above is setup, you can access [yoursite.dev]/wp-admin as normal to co
 
 In `AppOption::getSingular()`, change "App Option" to "[Client Name] Option".
 
-##### Other Important Documentation In This Boilerplate
-[TacoForms](https://github.com/tacowordpress/taco-2016-boilerplate/blob/master/html/wp-content/themes/taco-theme/app/forms/README.md) – An API for quick form creation
+##### Other Documentation
+If you're looking for documentation on TacoForms that was previously included in this boilerplate, it has moved.
+It is now in a seperate repo at [https://github.com/tacowordpress/mr-spicy](https://github.com/tacowordpress/mr-spicy).
 
