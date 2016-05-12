@@ -30,7 +30,7 @@ $app_option = AppOption::getInstance();
 </div><?php // end contact info ?>
 
 <div class="contact-form">
-  <?php $contact_form = new TacoForm(
+  <?php $contact_form = new \Taco\MrSpicy(
     array(
       'conf_name' => 'Contact Form Configuration',
       'fields' => 'auto',
