@@ -26,9 +26,6 @@ require_once __DIR__.'/traits/Taquito.php';
 // settings
 require_once __DIR__.'/posts/AppOption.php';
 
-// forms
-require_once __DIR__.'/forms/core/loader.php';
-
 //posts
 require_once __DIR__.'/posts/Post.php';
 require_once __DIR__.'/posts/Page.php';
