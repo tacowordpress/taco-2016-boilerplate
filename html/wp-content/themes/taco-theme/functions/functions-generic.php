@@ -46,11 +46,76 @@ add_filter('login_headertitle', 'app_login_header_unlink');
 
 
 /**
+* function to check the status of the plugins
+* @return array
+*/
+function plugin_activity_checker() {
+    // Check if get_plugins() function exists. This is required on the front end of the
+    // site, since it is in a file that is normally only loaded in the admin.
+    if ( ! function_exists( 'get_plugins' ) ) {
+      require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+    // possible seo plugins
+    $seo_plugins = array(
+        "wordpress-seo/wp-seo.php" => "Yoast"
+    );
+
+    $active_plugins = get_option("active_plugins");
+    $all_plugins = array_keys(get_plugins());
+    // enabled, uploaded
+    $plugin_status = [];
+     
+    foreach($seo_plugins as $name => $title) {
+      $plugin_enabled = false;
+      $plugin_uploaded = false;
+      
+      if(in_array($name, $active_plugins)) {
+        $plugin_enabled = true;
+        $plugin_uploaded = true;
+              
+      } elseif(in_array($name, $all_plugins)) {
+        $plugin_uploaded = true;
+      }
+      
+      $plugin_status[$title] = array(
+        'plugin_enabled' => $plugin_enabled,
+        'plugin_uploaded' => $plugin_uploaded
+      );
+    }
+    return $plugin_status;
+}
+
+/**
+* Check if SEO plugin installed
+* @return bool
+*/
+function check_if_seo_plugin_installed() {
+  // see if seo is already installed
+  $plugins_status = plugin_activity_checker();
+  $yoast_isset = isset($plugins_status['Yoast']);
+  $yoast_enabled = $plugins_status['Yoast']['plugin_enabled'];
+    
+  if($yoast_isset && $yoast_enabled === true) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+/**
  * Get the page title
  * @return string
  */
 function app_get_page_title() {
-  return join(' | ', array_filter(array(wp_title(null, false), get_bloginfo('name')), 'strlen'));
+  // check if yoast is set
+  $yoast_isset = check_if_seo_plugin_installed();
+    
+  if($yoast_isset) {
+    return get_the_title();
+  } else {
+    return join(' | ', array_filter(array(wp_title(null, false), get_bloginfo('name')), 'strlen'));
+  }
 }
 
 
