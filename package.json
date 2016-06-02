@@ -1,0 +1,28 @@
+{
+  "name": "taco-boilerplate",
+  "version": "1.0.0",
+  "description": "Taco Boilerplate",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "node-sass": "^3.7.0",
+    "sass-loader": "^3.2.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1",
+    "webpack-notifier": "^1.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tacowordpress/taco-2016-boilerplate.git"
+  },
+  "author": "Vermilion",
+  "license": "UNLICENSED"
+}
