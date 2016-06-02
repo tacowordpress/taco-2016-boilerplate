@@ -2,6 +2,7 @@
 
 let ExtractTextPlugin     = require('extract-text-webpack-plugin');
 let WebpackNotifierPlugin = require('webpack-notifier');
+let webpack               = require('webpack');
 let fs                    = require('fs');
 let path                  = require('path')
 
@@ -57,5 +58,8 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('[name]' + (is_production === true ? '.min' : '') +  '.css'),
     new WebpackNotifierPlugin(),
+    new webpack.DefinePlugin({
+        'process.env.NODE_ENV': (is_production === true ? 'production' : 'development')
+    }),
   ]
 };
