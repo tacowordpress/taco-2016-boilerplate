@@ -5,8 +5,11 @@ $theme = AppOption::getInstance();
 <html class="no-js" <?php language_attributes(); ?>>
 <head>
   <meta charset="<?php bloginfo('charset'); ?>">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title><?php echo app_get_page_title(); ?></title>
+
+  <title><?php app_get_page_title(); ?></title>
+  <?php if(check_if_seo_plugin_installed() === false) { ?>
+    <?php include dirname(__FILE__).'/incl-open-graph-meta.php'; ?>
+  <?php } ?>
 
   <?php include __DIR__.'/incl-open-graph-meta.php'; ?>
 
