@@ -13,8 +13,8 @@ process.argv.forEach(function(arg) {
   }
 });
 
-let source_path = './src/js/';
-let output_path = './html/wp-content/themes/taco-theme/_/';
+let source_path = './_/src/js/';
+let output_path = './_/';
 
 // Get all top level files
 let files = fs.readdirSync(source_path);
