@@ -7,11 +7,9 @@
 function app_get_css() {
   $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
     ? '_/css/main.css'
-    : '_/css/main-dev.css';
+    : '_/css/main.min.css';
   return array(
     'all' => [
-      'foundation' => '_/lib/foundation/css/foundation.min.css',
-      'fontawesome' => '_/lib/fontawesome/css/font-awesome.min.css',
       'main' => $app_css,
     ],
   );
@@ -23,9 +21,12 @@ function app_get_css() {
  * @return array
  */
 function app_get_js() {
+  $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
+    ? '_/dist/main.css'
+    : '_/dist/main.min.js';
+
   return [
-    'jquery' => '_/lib/jquery/dist/jquery.min.js',
-    'main' => '_/js/app.js',
+    'main' => '_/dist/main.js',
   ];
 }
 
@@ -286,7 +287,7 @@ add_filter('single_template', function() {
  */
 function get_edit_link($id=null, $edit_type='post', $label=null, $display_inline=false) {
   if(!(is_user_logged_in() && current_user_can('manage_options'))) return null;
-  
+
   $link_class = 'class="front-end-edit-link"';
   $link_tag = ($display_inline) ? 'span' : 'p';
   if(is_null($label)) {
@@ -313,7 +314,7 @@ function get_edit_link($id=null, $edit_type='post', $label=null, $display_inline
       $link_tag
     );
   }
-  
+
   // Find an applicable post type for editing a custom term
   $post_type = null;
   $post_types_by_taxonomy = [];
@@ -340,7 +341,7 @@ function get_edit_link($id=null, $edit_type='post', $label=null, $display_inline
   } else {
     $post_type = 'post';
   }
-  
+
   if(is_null($id)) {
     // View taxonomy term list
     return sprintf(
@@ -353,7 +354,7 @@ function get_edit_link($id=null, $edit_type='post', $label=null, $display_inline
       $link_tag
     );
   }
-  
+
   // Edit term
   return sprintf(
     '<%s %s><a href="%s">Edit %s</a></%s>',
@@ -374,7 +375,7 @@ function get_edit_link($id=null, $edit_type='post', $label=null, $display_inline
  */
 function get_app_options_link($description=null, $display_inline=false) {
   if(!(is_user_logged_in() && current_user_can('manage_options'))) return null;
-  
+
   if(is_null($description)) {
     $description = 'this';
   }
@@ -401,10 +402,10 @@ add_filter('body_class', 'add_slug_to_body_class');
 function add_slug_to_menu_item_class($menu_html) {
   // Get menu item IDs and link slugs
   preg_match_all('/menu-item-(\d+).*href="(?:(?:.*?)\/\/(?:.*?))?\/(.*?)\/?"/', $menu_html, $matches);
-  
+
   // Combine match groups into array
   $menu_items = array_combine($matches[1], $matches[2]);
-  
+
   // Strip slugs down to last segment
   $menu_items = array_map(function($el){
     $slash_index = strrpos($el, '/');
@@ -412,7 +413,7 @@ function add_slug_to_menu_item_class($menu_html) {
       ? substr($el, $slash_index + 1)
       : $el;
   }, $menu_items);
-  
+
   // Search/replace
   foreach($menu_items as $menu_item_id => $link_slug) {
     $menu_html = preg_replace('/menu-item-'.$menu_item_id.'">/', 'menu-item-'.$menu_item_id.' menu-item-'.$link_slug.'">', $menu_html, 1);
@@ -420,4 +421,3 @@ function add_slug_to_menu_item_class($menu_html) {
   return $menu_html;
 }
 add_filter('wp_nav_menu', 'add_slug_to_menu_item_class');
-

@@ -61,5 +61,14 @@ module.exports = {
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': (is_production === true ? 'production' : 'development')
     }),
-  ]
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+    }),
+  ],
+  resolve: {
+    alias: {
+      jquery: "jquery/src/jquery"
+    }
+  }
 };
