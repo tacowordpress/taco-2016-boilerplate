@@ -5,9 +5,13 @@
  * @return array
  */
 function app_get_css() {
+  $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
+    ? '_/dist/main.min.css'
+    : '_/dist/main.css';
+
   return array(
     'all' => [
-      'main' => '_/dist/main.css',
+      'main' => $app_css,
     ],
   );
 }
@@ -18,9 +22,17 @@ function app_get_css() {
  * @return array
  */
 function app_get_js() {
+  $app_js = (ENVIRONMENT === ENVIRONMENT_PROD)
+    ? '_/dist/main.min.js'
+    : '_/dist/main.js';
+
+  $jquery_js = (ENVIRONMENT === ENVIRONMENT_PROD)
+    ? '_/dist/jquery.min.js'
+    : '_/dist/jquery.js';
 
   return [
-    'main' => '_/dist/main.js',
+    'jquery' => $jquery_js,
+    'main' => $app_js,
   ];
 }
 

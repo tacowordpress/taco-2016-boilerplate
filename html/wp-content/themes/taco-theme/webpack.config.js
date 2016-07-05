@@ -31,7 +31,7 @@ files.forEach(function(file) {
 
 module.exports = {
   entry: entry_points,
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   output: {
       path: output_path + 'dist/',
       filename: '[name]' + (is_production === true ? '.min' : '') +  '.js'
@@ -40,7 +40,7 @@ module.exports = {
     loaders: [
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!sass-loader?sourceMap=map')
       },
       {
         test: /\.(jpg|png|svg|gif|eot|ttf|woff)(\?.+)?$/,

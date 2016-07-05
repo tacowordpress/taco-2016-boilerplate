@@ -1,2 +1,4 @@
 require('../scss/main.scss');
-require('jquery');
+require('./util/test.js');
+
+$('body').text('test');
