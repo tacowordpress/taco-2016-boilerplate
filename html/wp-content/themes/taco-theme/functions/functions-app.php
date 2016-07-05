@@ -5,12 +5,9 @@
  * @return array
  */
 function app_get_css() {
-  $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
-    ? '_/css/main.css'
-    : '_/css/main.min.css';
   return array(
     'all' => [
-      'main' => $app_css,
+      'main' => '_/dist/main.css',
     ],
   );
 }
@@ -21,9 +18,6 @@ function app_get_css() {
  * @return array
  */
 function app_get_js() {
-  $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
-    ? '_/dist/main.css'
-    : '_/dist/main.min.js';
 
   return [
     'main' => '_/dist/main.js',
@@ -182,7 +176,7 @@ function get_app_icons() {
 
   $app_dir = __DIR__.'/../';
 
-  $files = scandir($app_dir.'/_/img/app-icons');
+  $files = scandir($app_dir.'/_/src/img/app-icons');
   $paths = [];
   foreach($files as $file)  {
     if(!preg_match('/\.png/', $file)) continue;
