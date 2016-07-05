@@ -53,6 +53,9 @@ module.exports = {
           presets: ['es2015', 'react']
         }
       }
+    ],
+    noParse: [
+      '/node_modules/jquery/src/jquery.js',
     ]
   },
   plugins: [
