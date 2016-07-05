@@ -16,6 +16,8 @@ process.argv.forEach(function(arg) {
 let source_path = './_/src/js/';
 let output_path = './_/';
 
+let node_dir = __dirname + '/node_modules/';
+
 // Get all top level files
 let files = fs.readdirSync(source_path);
 
@@ -29,13 +31,19 @@ files.forEach(function(file) {
   }
 });
 
-module.exports = {
+let config = {
+  add_vendor: function (name, path) {
+    this.resolve.alias[name] = path;
+    this.module.noParse.push(new RegExp(path));
+    this.entry[name] = [name];
+  },
   entry: entry_points,
   devtool: 'source-map',
   output: {
       path: output_path + 'dist/',
       filename: '[name]' + (is_production === true ? '.min' : '') +  '.js'
   },
+  resolve: { alias: {} },
   module: {
     loaders: [
       {
@@ -50,13 +58,11 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'react']
-        }
+          presets: ['es2015', 'react'],
+        },
       }
     ],
-    noParse: [
-      '/node_modules/jquery/src/jquery.js',
-    ]
+    noParse: []
   },
   plugins: [
     new ExtractTextPlugin('[name]' + (is_production === true ? '.min' : '') +  '.css'),
@@ -64,14 +70,9 @@ module.exports = {
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': (is_production === true ? 'production' : 'development')
     }),
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
-    }),
   ],
-  resolve: {
-    alias: {
-      jquery: "jquery/src/jquery"
-    }
-  }
 };
+
+config.add_vendor('jquery', node_dir + 'jquery/dist/jquery' + (is_production === true ? '.min' : '') +  '.js');
+
+module.exports = config;
