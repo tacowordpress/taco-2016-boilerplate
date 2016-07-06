@@ -26,7 +26,12 @@ function app_get_js() {
     ? '_/dist/main.min.js'
     : '_/dist/main.js';
 
+  $jquery_js = (ENVIRONMENT === ENVIRONMENT_PROD)
+    ? '_/dist/jquery.min.js'
+    : '_/dist/jquery.js';
+
   return [
+    'jquery' => $jquery_js,
     'main' => $app_js,
   ];
 }
