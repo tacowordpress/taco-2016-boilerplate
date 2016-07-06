@@ -60,7 +60,11 @@ let config = {
         query: {
           presets: ['es2015', 'react'],
         },
-      }
+      },
+      // {
+      //   test: require.resolve('jquery'),
+      //   loader: 'expose?jQuery!expose?$'
+      // },
     ],
     noParse: []
   },
@@ -70,6 +74,14 @@ let config = {
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': (is_production === true ? 'production' : 'development')
     }),
+    new webpack.ProvidePlugin({
+        '$': 'jquery',
+        'jQuery': 'jquery',
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'jquery',
+      minChunks: Infinity,
+    })
   ],
 };
 
