@@ -35,7 +35,6 @@ let config = {
   add_vendor: function (name, path) {
     this.resolve.alias[name] = path;
     this.module.noParse.push(new RegExp(path));
-    this.entry[name] = [name];
   },
   entry: entry_points,
   devtool: 'source-map',
@@ -51,7 +50,7 @@ let config = {
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!sass-loader?sourceMap=map')
       },
       {
-        test: /\.(jpg|png|svg|gif|eot|ttf|woff)(\?.+)?$/,
+        test: /\.(jpg|png|svg|gif|eot|ttf|woff|woff2)(\?.+)?$/,
         loader: 'file-loader?name=assets/[name].[ext]'
       },
       {
@@ -61,10 +60,6 @@ let config = {
           presets: ['es2015', 'react'],
         },
       },
-      // {
-      //   test: require.resolve('jquery'),
-      //   loader: 'expose?jQuery!expose?$'
-      // },
     ],
     noParse: []
   },
