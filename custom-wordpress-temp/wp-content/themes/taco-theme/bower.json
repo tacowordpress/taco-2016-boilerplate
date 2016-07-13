@@ -1,0 +1,23 @@
+{
+  "name": "tacowpshell",
+  "version": "0.0.1",
+  "homepage": "https://github.com/vermiliondesign/taco_shell_boilerplate",
+  "authors": [
+    "Brittany <britt.ansay@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "_/lib",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "fontawesome": "~4.3.0",
+    "foundation": "~5.5.2",
+    "jquery": "~2.1.4",
+    "modernizr": "~2.8.3"
+  }
+}
