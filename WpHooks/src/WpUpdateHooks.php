@@ -63,7 +63,7 @@ class WpUpdateHooks
         self::deleteTreeWithSymlinks(__DIR__.'/../../html/wp-content');
         self::recursiveCopy(__DIR__.'/../../custom-wordpress-temp/wp-content', __DIR__.'/../../html/wp-content');
         copy(__DIR__.'/../../custom-wordpress-temp/.htaccess', __DIR__.'/../../html/.htaccess');
-        //self::deleteTree(__DIR__.'/../../custom-wordpress-temp');
+        self::deleteTree(__DIR__.'/../../custom-wordpress-temp');
 
         $handle = fopen(__DIR__.'/../../html/wp-config.php', 'w');
         fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
