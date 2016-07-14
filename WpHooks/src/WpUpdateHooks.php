@@ -2,10 +2,18 @@
 namespace WpHooks;
 use Composer\Script\Event;
 
-/* scenarios
- * cloned from github - no prior composer installs or updates - user does composer install
- * all wordpress files and boilerplate files are there - user does composer install or update
- * files are on staging or production freshly deployed from service - user does an install or update
+/*
+ * This script performs a number of file/dir operations before and after WordPress
+ *  gets installed via Composer. The most important being the installation of the Taco Boilerplate
+ *  code and theme.
+ *
+ * SCENARIOS
+ * cloned from github - no prior Composer installs or updates - user does Composer install
+ * all WordPress files and boilerplate files are there - user does Composer install or update
+ * files are on staging or production, freshly deployed from service - user does a Composer install or update
+ *
+ * This script was incredibly difficult to setup. If you plan on change anything, please make
+ *  make sure to test all possible scenarios.
  */
 
 class WpUpdateHooks
@@ -155,6 +163,10 @@ class WpUpdateHooks
 
         if (file_exists($html_temp = __DIR__.'/../../html_temp')) {
             self::deleteTree($html_temp);
+        }
+
+        if(!self::symlinkExists($link = __DIR__.'/../../shortcut-taco-theme')) {
+            symlink(__DIR__.'/../../html/wp-content/themes/taco-theme', $link);
         }
 
         return;
