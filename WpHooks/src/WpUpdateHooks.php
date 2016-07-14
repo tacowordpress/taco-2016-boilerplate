@@ -29,6 +29,10 @@ class WpUpdateHooks
             $event->getIO()->write('The Boilerplate was already setup, but there are no wp files. Installing WordPress.');
             return;
         }
+        if(file_exists(__DIR__.'/../../html_temp')) {
+            self::$boilerplatePreviouslyInstalled = true;
+            $event->getIO()->write('Trying with update command.');
+        }
         $event->getIO()->write('Nothing to do in pre-install or pre-update. continuing...');
         return;
     }
@@ -62,13 +66,13 @@ class WpUpdateHooks
             return;
         }
         self::deleteTreeWithSymlinks(__DIR__.'/../../html/wp-content');
-        self::recursiveCopy(__DIR__.'/../../custom-wordpress-temp/wp-content', __DIR__.'/../../html/wp-content');
-        copy(__DIR__.'/../../custom-wordpress-temp/.htaccess', __DIR__.'/../../html/.htaccess');
-        self::deleteTree(__DIR__.'/../../custom-wordpress-temp');
+        self::recursiveCopy(__DIR__.'/../../boilerplate/wp-content', __DIR__.'/../../html/wp-content');
+        copy(__DIR__.'/../../boilerplate/.htaccess', __DIR__.'/../../html/.htaccess');
 
         if (!file_exists($wp_config = __DIR__.'/../../wp-config.php')) {
-            copy(__DIR__.'/wp-config.php', __DIR__.'/../../wp-config.php');
+            copy(__DIR__.'/../../boilerplate-templates/wp-config.php', __DIR__.'/../../wp-config.php');
         }
+        self::deleteTree(__DIR__.'/../../boilerplate');
 
         $handle = fopen(__DIR__.'/../../html/wp-config.php', 'w');
         fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
@@ -104,6 +108,7 @@ class WpUpdateHooks
         if(file_exists($html = __DIR__.'/../../html')) {
             self::deleteTreeWithSymlinks($html);
         }
+        mkdir(__DIR__.'/../../html_temp');
         $event->getIO()->write('...done');
     }
 
@@ -118,7 +123,7 @@ class WpUpdateHooks
         }
 
         if (!file_exists($wp_config = __DIR__.'/../../wp-config.php')) {
-            copy(__DIR__.'/wp-config.php', __DIR__.'/../../wp-config.php');
+            copy(__DIR__.'/../../boilerplate-templates/wp-config.php', __DIR__.'/../../wp-config.php');
         }
 
         if(!file_exists($wp_config = __DIR__.'/../../html/wp-config.php')) {
@@ -147,6 +152,11 @@ class WpUpdateHooks
         if (file_exists($wp_config_sample = __DIR__.'/../../html/wp-config-sample.php')) {
             unlink($wp_config_sample );
         }
+
+        if (file_exists($html_temp = __DIR__.'/../../html_temp')) {
+            self::deleteTree($html_temp);
+        }
+
         return;
     }
 
