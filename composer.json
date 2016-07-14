@@ -3,16 +3,20 @@
     "johnpbloch/wordpress": "^4.4"
   },
   "extra": {
-    "wordpress-install-dir": "wordpress-temp"
+    "wordpress-install-dir": "html"
   },
   "scripts": {
+    "pre-install-cmd": [
+        "WpHooks\\WpUpdateHooks::preAnything"
+    ],
+    "pre-update-cmd": [
+        "WpHooks\\WpUpdateHooks::preAnything"
+    ],
     "post-update-cmd": [
-      "WpHooks\\WpUpdateHooks::updateWpConfig"
+        "WpHooks\\WpUpdateHooks::postAnything"
     ],
     "post-install-cmd": [
-      "WpHooks\\WpUpdateHooks::updateWpConfig",
-      "WpHooks\\WpUpdateHooks::installComposerInTheme",
-      "WpHooks\\WpUpdateHooks::printRemainingInstructions"
+        "WpHooks\\WpUpdateHooks::postAnything"
     ]
   },
   "autoload": {
