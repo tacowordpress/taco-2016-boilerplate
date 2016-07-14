@@ -4,7 +4,7 @@ use Composer\Script\Event;
 
 /* scenarios
  * cloned from github - no prior composer installs or updates - user does composer install
- * all wordpress files and boilerplate files are there - user does comopser install or update
+ * all wordpress files and boilerplate files are there - user does composer install or update
  * files are on staging or production freshly deployed from service - user does an install or update
  */
 
@@ -93,7 +93,7 @@ class WpUpdateHooks
     {
         $event->getIO()->write('Moving files to safety before installing WordPress...');
         if(!file_exists($wp_temp = __DIR__.'/../../wp-temp')) {
-            mkdir($wp_temp);
+            mkdir($wp_temp, 0777, true);
         }
         if(file_exists($wp_content = __DIR__.'/../../html/wp-content')) {
             rename($wp_content, __DIR__.'/../../wp-temp/wp-content');
@@ -103,9 +103,6 @@ class WpUpdateHooks
         }
         if(file_exists($html = __DIR__.'/../../html')) {
             self::deleteTreeWithSymlinks($html);
-        }
-        if(file_exists($wp_temp = __DIR__.'/../../wp-temp')) {
-            self::deleteTreeWithSymlinks($wp_temp);
         }
         $event->getIO()->write('...done');
     }
@@ -139,9 +136,14 @@ class WpUpdateHooks
             rename($temp_folder.'/wp-content', __DIR__.'/../../html/wp-content');
         }
 
+        if(file_exists($wp_temp = __DIR__.'/../../wp-temp')) {
+            self::deleteTreeWithSymlinks($wp_temp);
+        }
+
         if (file_exists($composer_dir = __DIR__.'/../../html/composer.json')) {
             unlink($composer_dir);
         }
+
         if (file_exists($wp_config_sample = __DIR__.'/../../html/wp-config-sample.php')) {
             unlink($wp_config_sample );
         }
