@@ -47,7 +47,8 @@ class WpUpdateHooks
         return;
     }
 
-    public static function doFreshInstall(Event $event) {
+    public static function doFreshInstall(Event $event)
+    {
         self::updateWpConfig($event);
         self::installComposerInTheme($event);
         self::printRemainingInstructions($event);
@@ -64,6 +65,10 @@ class WpUpdateHooks
         self::recursiveCopy(__DIR__.'/../../custom-wordpress-temp/wp-content', __DIR__.'/../../html/wp-content');
         copy(__DIR__.'/../../custom-wordpress-temp/.htaccess', __DIR__.'/../../html/.htaccess');
         self::deleteTree(__DIR__.'/../../custom-wordpress-temp');
+
+        if (file_exists($wp_config = __DIR__.'/../../wp-config.php')) {
+            copy(__DIR__.'/wp-config.php', __DIR__.'/../../wp-config.php');
+        }
 
         $handle = fopen(__DIR__.'/../../html/wp-config.php', 'w');
         fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
@@ -84,7 +89,8 @@ class WpUpdateHooks
 
     }
 
-    public static function moveCustomFiles(Event $event) {
+    public static function moveCustomFiles(Event $event)
+    {
         $event->getIO()->write('Moving files to safety before installing WordPress...');
         if(!file_exists($wp_temp = __DIR__.'/../../wp-temp')) {
             mkdir($wp_temp);
@@ -104,7 +110,8 @@ class WpUpdateHooks
         $event->getIO()->write('...done');
     }
 
-    public static function doBoilerplateAlreadySetupScript(Event $event) {
+    public static function doBoilerplateAlreadySetupScript(Event $event)
+    {
         $event->getIO()->write('The boilerplate was previously setup.');
 
         if(!file_exists(__DIR__.'/../../html')) {
@@ -113,6 +120,10 @@ class WpUpdateHooks
             return;
         }
 
+        if (file_exists($wp_config = __DIR__.'/../../wp-config.php')) {
+            copy(__DIR__.'/wp-config.php', __DIR__.'/../../wp-config.php');
+        }
+        
         if(!file_exists($wp_config = __DIR__.'/../../html/wp-config.php')) {
             $handle = fopen($wp_config, 'w');
             fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
@@ -157,7 +168,8 @@ class WpUpdateHooks
 
     }
 
-    public static function symlinkExists($path) {
+    public static function symlinkExists($path)
+    {
         if(!file_exists($path)) {
             return false;
         }
