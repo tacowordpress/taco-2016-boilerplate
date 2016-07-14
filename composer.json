@@ -1,27 +1,35 @@
 {
-  "require": {
-    "johnpbloch/wordpress": "^4.4"
-  },
-  "extra": {
-    "wordpress-install-dir": "html"
-  },
-  "scripts": {
-    "pre-install-cmd": [
-        "WpHooks\\WpUpdateHooks::preAnything"
+    "require": {
+        "johnpbloch/wordpress": "^4.4",
+        "composer/installers": "v1.0.7",
+        "tacowordpress/taco-theme": "dev-master"
+    },
+    "extra": {
+        "wordpress-install-dir": "html"
+    },
+    "scripts": {
+        "pre-install-cmd": [
+            "WpHooks\\WpUpdateHooks::preAnything"
+        ],
+        "pre-update-cmd": [
+            "WpHooks\\WpUpdateHooks::preAnything"
+        ],
+        "post-update-cmd": [
+            "WpHooks\\WpUpdateHooks::postAnything"
+        ],
+        "post-install-cmd": [
+            "WpHooks\\WpUpdateHooks::postAnything"
+        ]
+    },
+    "repositories": [
+        {
+            "url": "https://github.com/tacowordpress/taco-theme.git",
+            "type": "git"
+        }
     ],
-    "pre-update-cmd": [
-        "WpHooks\\WpUpdateHooks::preAnything"
-    ],
-    "post-update-cmd": [
-        "WpHooks\\WpUpdateHooks::postAnything"
-    ],
-    "post-install-cmd": [
-        "WpHooks\\WpUpdateHooks::postAnything"
-    ]
-  },
-  "autoload": {
-    "psr-4": {
-      "WpHooks\\": "WpHooks/src/"
+    "autoload": {
+        "psr-4": {
+            "WpHooks\\": "WpHooks/src/"
+        }
     }
-  }
 }
