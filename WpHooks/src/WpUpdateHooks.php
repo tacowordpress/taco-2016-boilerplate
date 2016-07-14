@@ -62,8 +62,23 @@ class WpUpdateHooks
     public static function doFreshInstall(Event $event)
     {
         self::updateWpConfig($event);
+        self::copyTheme($event);
         self::installComposerInTheme($event);
         self::printRemainingInstructions($event);
+    }
+
+    public static function copyTheme(Event $event)
+    {
+        if(!file_exists($taco_theme = __DIR__.'/../../vendor/tacowordpress/taco-theme')) {
+            $event->getIO()->write('The folder "taco-theme" was not installed for some reason. You will have to do it manually.');
+            $event->stopPropagation();
+            return;
+        }
+        self::recursiveCopy($taco_theme.'/src', __DIR__.'/../../html/wp-content/themes/taco-theme');
+        if(file_exists(__DIR__.'/../../html/wp-content/themes/taco-theme')) {
+            $event->getIO()->write('The theme "taco-theme" was successfully installed.');
+            return;
+        }
     }
 
     public static function updateWpConfig(Event $event)

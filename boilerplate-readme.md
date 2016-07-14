@@ -7,10 +7,11 @@ Run "composer install" from the html folder's parent. If successful, WordPress w
 
 The contents of wp-config.php in the html directory will be replaced with `<?php require_once __DIR__.'/../wp-config.php';` so that it points to another wp-config.php file outside of the public root. This is where the actual wordpress configuration settings need to be setup.
 
-After the above is setup, you can access [yoursite.dev]/wp-admin as normal to continue with the WordPress installation. Once WordPress is installed, first thing is to turn on the "Taco Theme"
+After the above is setup, you can access [yoursite.dev]/wp-admin as normal to continue with the WordPress installation.
 
 In `AppOption::getSingular()`, change "App Option" to "[Client Name] Option".
 
-##### Other Important Documentation In This Boilerplate
-[TacoForms](https://github.com/tacowordpress/taco-2016-boilerplate/blob/master/html/wp-content/themes/taco-theme/app/forms/README.md) – An API for quick form creation
+##### Other Documentation
+If you're looking for documentation on TacoForms that was previously included in this boilerplate, it has moved.
+It is now in a seperate repo at [https://github.com/tacowordpress/mr-spicy](https://github.com/tacowordpress/mr-spicy).
 
