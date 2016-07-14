@@ -1,7 +1,6 @@
 {
     "require": {
         "johnpbloch/wordpress": "^4.4",
-        "composer/installers": "v1.0.7",
         "tacowordpress/taco-theme": "dev-master"
     },
     "extra": {
