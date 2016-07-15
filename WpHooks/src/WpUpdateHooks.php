@@ -63,6 +63,7 @@ class WpUpdateHooks
     {
         self::updateWpConfig($event);
         self::copyTheme($event);
+        self::writeHtPassword($event);
         self::installComposerInTheme($event);
         self::printRemainingInstructions($event);
     }
@@ -113,6 +114,39 @@ class WpUpdateHooks
                 'point to the non-public root "wp-config.php" file.'
             ))
         );
+
+    }
+
+    public static function getBashValue($event, $prompt)
+    {
+        $temp_file = __DIR__.'/../../temp-data-'.md5(date('Y-m-d H:i:s')).'txt';
+        file_put_contents($temp_file, '');
+        $event->getIO()->write($prompt);
+        shell_exec(sprintf('read vname; echo $vname > %s;', $temp_file));
+        $value = trim(file_get_contents($temp_file));
+        unlink($temp_file);
+        return $value;
+    }
+
+    public static function writeHtPassword(Event $event) {
+        $event->getIO()->write('htpasswd authentication settings...');
+        $event->getIO()->write('These settings will cause an authentication box to appear if a visitor arrives at a server environment that is not specified.');
+        $event->getIO()->write('By default a local server name must be specified');
+        $local_server_name = self::getBashValue($event, 'Please enter your local server domain without the protocol, e.g. "test.dev".');
+        $authuser = self::getBashValue($event, 'Please enter a username. This will be used on all environments if applicable.');
+        $clear_text_htpassword = self::getBashValue($event, 'Please enter a password. This will be used on all environments if applicable.');
+        $password = crypt($clear_text_htpassword, base64_encode($clear_text_htpassword));
+        $string = $authuser.':'.$password;
+        file_put_contents(__DIR__.'/../../.htpasswd', $string);
+
+        // replace contents in .htaccess
+        $htaccess_contents = file_get_contents(__DIR__.'/../../html/.htaccess');
+        $new_htaccess_contents = str_replace('{{htpassfile}}', realpath(__DIR__.'/../../.htpasswd'), $htaccess_contents);
+
+        $new_htaccess_contents = str_replace('{{localservername}}', $local_server_name , $new_htaccess_contents);
+        file_put_contents(__DIR__.'/../../html/.htaccess', $new_htaccess_contents);
+        $event->getIO()->write('...htpasswd authentication settings completed');
+        $event->getIO()->write('You may edit the configuration in "/html/.htaccess".');
 
     }
 
