@@ -29,7 +29,7 @@ require_once __DIR__.'/../vendor/autoload.php';
    'DB_SAVE_QUERIES',
    'WP_AUTO_UPDATE_CORE',
    'WP_DEBUG'
-  ]);
+  ])->notEmpty();
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
