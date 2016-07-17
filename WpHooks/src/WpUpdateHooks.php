@@ -91,16 +91,16 @@ class WpUpdateHooks
         }
         self::deleteTreeWithSymlinks(__DIR__.'/../../html/wp-content');
         self::recursiveCopy(__DIR__.'/../../boilerplate/wp-content', __DIR__.'/../../html/wp-content');
+
         copy(__DIR__.'/../../boilerplate/.htaccess', __DIR__.'/../../html/.htaccess');
 
-        if (!file_exists($wp_config = __DIR__.'/../../wp-config.php')) {
-            copy(__DIR__.'/../../boilerplate-templates/wp-config.php', __DIR__.'/../../wp-config.php');
+        if (!file_exists($wp_config = __DIR__.'/../../html/wp-config.php')) {
+            copy(__DIR__.'/../../boilerplate/wp-config.php', __DIR__.'/../../html/wp-config.php');
+        }
+        if (!file_exists($env_file = __DIR__.'/../../.env')) {
+            copy(__DIR__.'/../../boilerplate/.env', __DIR__.'/../../.env');
         }
         self::deleteTree(__DIR__.'/../../boilerplate');
-
-        $handle = fopen(__DIR__.'/../../html/wp-config.php', 'w');
-        fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
-        fclose($handle);
 
         if (file_exists(__DIR__.'/../../html/composer.json')) {
             unlink(__DIR__.'/../../html/composer.json');
@@ -108,12 +108,6 @@ class WpUpdateHooks
         if (file_exists(__DIR__.'/../../html/wp-config-sample.php')) {
             unlink(__DIR__.'/../../html/wp-config-sample.php');
         }
-        $event->getIO()->write(
-            join('', array('WordPress has been installed and "wp-config.php" ',
-                'in the folder "html" has been updated to ',
-                'point to the non-public root "wp-config.php" file.'
-            ))
-        );
 
     }
 
@@ -159,6 +153,9 @@ class WpUpdateHooks
         if(file_exists($wp_content = __DIR__.'/../../html/wp-content')) {
             rename($wp_content, __DIR__.'/../../wp-temp/wp-content');
         }
+        if(file_exists($wp_content = __DIR__.'/../../html/wp-config.php')) {
+            rename($wp_content, __DIR__.'/../../wp-temp/wp-config.php');
+        }
         if(file_exists($htaccess = __DIR__.'/../../html/.htaccess')) {
             rename($htaccess, __DIR__.'/../../wp-temp/.htaccess');
         }
@@ -179,16 +176,6 @@ class WpUpdateHooks
             return;
         }
 
-        if (!file_exists($wp_config = __DIR__.'/../../wp-config.php')) {
-            copy(__DIR__.'/../../boilerplate-templates/wp-config.php', __DIR__.'/../../wp-config.php');
-        }
-
-        if(!file_exists($wp_config = __DIR__.'/../../html/wp-config.php')) {
-            $handle = fopen($wp_config, 'w');
-            fwrite($handle, "<?php require_once __DIR__.'/../wp-config.php';");
-            fclose($handle);
-        }
-
         if(file_exists($wp_content_dir = __DIR__.'/../../html/wp-content')) {
             self::deleteTreeWithSymlinks($wp_content_dir);
         }
@@ -196,6 +183,7 @@ class WpUpdateHooks
         if(file_exists($temp_folder = __DIR__.'/../../wp-temp')) {
             rename($temp_folder.'/.htaccess', __DIR__.'/../../html/.htaccess');
             rename($temp_folder.'/wp-content', __DIR__.'/../../html/wp-content');
+            rename($temp_folder.'/wp-config.php', __DIR__.'/../../html/wp-config.php');
         }
 
         if(file_exists($wp_temp = __DIR__.'/../../wp-temp')) {
@@ -261,11 +249,9 @@ class WpUpdateHooks
         echo "\r\n";
         echo "\r\n";
         echo "\r\n";
-        echo "Please edit \"wp-config.php\" in the non public root by: \r\n";
-        echo " • changing the database prefix \r\n";
-        echo " • adding salts \r\n";
-        echo " • adding your database info \r\n";
-        echo "Remember: \"wp-config.php\" should not be part of the project's repository\r\n";
+        echo "Please edit the \".env\" file in the non public root by replacing empty values. \r\n";
+        echo "Add salts to the \"wp-config.php\" file \r\n";
+        echo "Important: The \".env\" file should not be part of the project's repository\r\n";
         echo " and should be added to your \".gitignore\" file.\r\n";
         echo 'Keep your database info somewhere for safe keeping!';
         echo "\r\n";
