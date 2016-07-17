@@ -1,7 +1,8 @@
 {
     "require": {
         "johnpbloch/wordpress": "^4.4",
-        "tacowordpress/taco-theme": "dev-master"
+        "tacowordpress/taco-theme": "dev-master",
+        "vlucas/phpdotenv": "^2.3"
     },
     "extra": {
         "wordpress-install-dir": "html"
