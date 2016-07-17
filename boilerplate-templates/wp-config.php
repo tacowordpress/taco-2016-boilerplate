@@ -17,36 +17,32 @@
  *
  * @package WordPress
  */
+require_once __DIR__.'/../vendor/autoload.php';
+ $dotenv = new Dotenv\Dotenv(__DIR__.'/../');
+ $dotenv->load();
+ $dotenv->required([
+   'ENVIRONMENT',
+   'DB_USER',
+   'DB_HOST',
+   'DB_PASS',
+   'DB_NAME',
+   'DB_SAVE_QUERIES',
+   'WP_AUTO_UPDATE_CORE',
+   'WP_DEBUG'
+  ]);
 
-// ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 define('ENVIRONMENT_DEV', 'dev');
 define('ENVIRONMENT_STAGE', 'stage');
 define('ENVIRONMENT_PROD', 'prod');
 
-if(preg_match('/(localhost|\.dev)/', $_SERVER['HTTP_HOST'])) {
-  define('ENVIRONMENT', ENVIRONMENT_DEV);
-  define('DB_USER',     '');
-  define('DB_PASSWORD', '');
-  define('DB_HOST',     'localhost');
-  define('DB_NAME',     '');
-  define('SAVEQUERIES', true);
-} elseif(preg_match('/(.vermilion.com)/', $_SERVER['HTTP_HOST'])) {
-  define('ENVIRONMENT', ENVIRONMENT_STAGE);
-  define('DB_USER',     '');
-  define('DB_PASSWORD', '');
-  define('DB_HOST',     'localhost');
-  define('DB_NAME',     '');
-  define('SAVEQUERIES', true);
-} else {
-  define('ENVIRONMENT', ENVIRONMENT_PROD);
-  define('DB_USER',     '');
-  define('DB_PASSWORD', '');
-  define('DB_HOST',     'localhost');
-  define('DB_NAME',     '');
-}
+define('ENVIRONMENT', getenv('ENVIRONMENT'));
+define('DB_USER',     getenv('DB_USER'));
+define('DB_PASSWORD', getenv('DB_PASS'));
+define('DB_HOST',     getenv('DB_HOST'));
+define('DB_NAME',     getenv('DB_NAME'));
+define('SAVEQUERIES', (bool) getenv('DB_SAVE_QUERIES'));
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -94,9 +90,9 @@ $table_prefix  = 'sitename_wp_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', false);
+define('WP_DEBUG',  (bool) getenv('WP_DEBUG'));
 
-define('WP_AUTO_UPDATE_CORE', true);
+define('WP_AUTO_UPDATE_CORE', (bool) getenv('WP_AUTO_UPDATE_CORE'));
 
 /* That's all, stop editing! Happy blogging. */
 
