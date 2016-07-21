@@ -7,7 +7,6 @@ shortcut-taco-theme
 
 # ignore composer dir
 /vendor
-/html/wp-content/themes/taco-theme/sync
 /html/wp-content/themes/taco-theme/app/core/vendor/*
 /html/wp-content/uploads/*
 /html/wp-content/themes/taco-theme/_/dist/*.min.js

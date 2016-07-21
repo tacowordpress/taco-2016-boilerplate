@@ -12,6 +12,7 @@ cat > ../../../../.git/hooks/pre-push <<EOF
   current_branch=\$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
   ./html/wp-content/themes/taco-theme/sync \$current_branch
 EOF
+chmod +x ../../../../.git/hooks/pre-push
 
 another="y"
 
