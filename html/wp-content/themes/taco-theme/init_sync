@@ -25,7 +25,7 @@ do
   read path
 
   #rsync
-  echo "$branch=\"rsync --delete -az ./html/wp-content/themes/taco-theme/_/dist $url:$path/html/wp-content/themes/taco-theme/_/dist\"" >> sync
+  echo "$branch=\"rsync --delete -az ./html/wp-content/themes/taco-theme/_/dist $url:$path/html/wp-content/themes/taco-theme/_\"" >> sync
   echo "test \$1 == \"$branch\" && \$$branch;" >> sync
 
   echo "Add another branch? [y/N]"
