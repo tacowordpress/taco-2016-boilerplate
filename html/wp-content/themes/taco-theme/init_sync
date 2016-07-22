@@ -12,8 +12,9 @@ fi
 
 #Add to pre push hook
 cat > $root/.git/hooks/pre-push <<EOF
+root=\$(git rev-parse --show-toplevel)
 current_branch=\$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-./html/wp-content/themes/taco-theme/sync \$1 \$current_branch
+\$root/html/wp-content/themes/taco-theme/sync \$1 \$current_branch
 EOF
 chmod +x $root/.git/hooks/pre-push
 
@@ -47,7 +48,7 @@ do
 
   #rsync
   echo "${remote}_${branch}=\"rsync --delete -avz ./html/wp-content/themes/taco-theme/_/dist $url:$path/html/wp-content/themes/taco-theme/_\"" >> $sync_file
-  echo "test \$1 == \"${remote}\" && test \$2 == \"${branch}\" && \$${remote}_${branch};" >> $sync_file
+  echo "test \"\$1\" == \"${remote}\" && test \"\$2\" == \"${branch}\" && \$${remote}_${branch};" >> $sync_file
 
   echo "Add another branch? [y/N]"
   read another
