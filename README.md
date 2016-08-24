@@ -5,7 +5,7 @@ This boilerplate does not include WordPress. Instead it uses composer to install
 ### Installation
 Run "composer install" from the html folder's parent. If successful, WordPress will be installed in the "html" directory without affecting the "wp-content" folder. A post install script will also be ran to install vendor files in the taco-theme/app/core. These files are vital for the theme to function properly.
 
-The contents of wp-config.php in the html directory will be replaced with `<?php require_once __DIR__.'/../wp-config.php';` so that it points to another wp-config.php file outside of the public root. This is where the actual wordpress configuration settings need to be setup.
+The contents of wp-config.php in the html directory will be replaced with `<?php require_once __DIR__.'/../wp-config.php';` so that it points to another wp-config.php file outside of the public root. This is where the actual wordpress configuration settings need to be setup.  There is a sample wp-config.php.sample included with the boilerplate.  
 
 After the above is setup, you can access [yoursite.dev]/wp-admin as normal to continue with the WordPress installation.
 
