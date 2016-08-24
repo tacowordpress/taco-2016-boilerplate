@@ -1,0 +1,5 @@
+/html/wp-content/themes/taco-theme/_/dist/*.min.js            -diff
+/html/wp-content/themes/taco-theme/_/dist/*.min.css           -diff
+
+/html/wp-content/themes/taco-theme/_/dist/*.min.js            merge=ours
+/html/wp-content/themes/taco-theme/_/dist/*.min.css           merge=ours

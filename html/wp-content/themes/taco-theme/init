@@ -1,0 +1,34 @@
+#!/bin/bash
+root=$(git rev-parse --show-toplevel)
+
+#Add to pre push hook
+if ! grep -q 'Keep ours merge' $root/.git/config ; then
+cat >> $root/.git/config <<EOF
+[merge "ours"]
+  name = "Keep ours merge"
+  driver = true
+EOF
+fi
+
+cat > $root/.git/hooks/post-rewrite <<EOF
+if [[ \$1 = "rebase" ]]; then
+  echo "\nRebuiling compiled files post \$1..."
+
+  webpack -d
+  webpack -p
+
+  echo "Adding built files to the last commit"
+  git add -u
+  git commit --amend --no-edit
+fi
+EOF
+chmod +x $root/.git/hooks/post-rewrite
+
+cat > $root/.git/hooks/pre-commit <<EOF
+is_rebase=\$(git config --get pull.rebase)
+if [[ \$is_rebase != "true" ]]; then
+  echo "\033[0;31mPlease set your merge strategy to rebase by running:\n\033[0mgit config --global pull.rebase true"
+  exit 1
+fi
+EOF
+chmod +x $root/.git/hooks/pre-commit
