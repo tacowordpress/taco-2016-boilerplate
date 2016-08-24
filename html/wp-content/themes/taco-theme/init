@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#http://blog.andrewray.me/dealing-with-compiled-files-in-git/
+
 root=$(git rev-parse --show-toplevel)
 
 #Add to pre push hook
