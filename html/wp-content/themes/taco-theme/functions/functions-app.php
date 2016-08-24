@@ -5,7 +5,7 @@
  * @return array
  */
 function app_get_css() {
-  $app_css = (ENVIRONMENT === ENVIRONMENT_PROD)
+  $app_css = (ENVIRONMENT !== ENVIRONMENT_DEV)
     ? '_/dist/main.min.css'
     : '_/dist/main.css';
 
@@ -22,11 +22,11 @@ function app_get_css() {
  * @return array
  */
 function app_get_js() {
-  $app_js = (ENVIRONMENT === ENVIRONMENT_PROD)
+  $app_js = (ENVIRONMENT !== ENVIRONMENT_DEV)
     ? '_/dist/main.min.js'
     : '_/dist/main.js';
 
-  $jquery_js = (ENVIRONMENT === ENVIRONMENT_PROD)
+  $jquery_js = (ENVIRONMENT !== ENVIRONMENT_DEV)
     ? '_/dist/jquery.min.js'
     : '_/dist/jquery.js';
 

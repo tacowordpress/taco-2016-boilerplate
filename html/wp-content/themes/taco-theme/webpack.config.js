@@ -37,7 +37,7 @@ let config = {
     this.module.noParse.push(new RegExp(path));
   },
   entry: entry_points,
-  devtool: 'source-map',
+  devtool: is_production ? '' : 'source-map',
   output: {
       path: output_path + 'dist/',
       filename: '[name]' + (is_production === true ? '.min' : '') +  '.js'
