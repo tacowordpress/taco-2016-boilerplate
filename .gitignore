@@ -1,6 +1,7 @@
 /html/*
 !/html/wp-content/
 !/html/.htaccess
+!/html/wp-config.php
 shortcut-taco-theme
 
 
