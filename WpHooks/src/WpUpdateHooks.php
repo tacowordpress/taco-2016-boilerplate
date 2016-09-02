@@ -47,6 +47,7 @@ class WpUpdateHooks
 
     public static function postAnything(Event $event) {
         if(self::$wordPressAlreadyInstalled === true) {
+
             $event->getIO()->write('...done');
             return;
         }
@@ -64,7 +65,6 @@ class WpUpdateHooks
         self::updateWpConfig($event);
         self::copyTheme($event);
         self::setSalts($event);
-        self::writeHtPassword($event);
         self::installComposerInTheme($event);
         self::printRemainingInstructions($event);
     }
@@ -91,7 +91,7 @@ class WpUpdateHooks
             $data,
             $wp_config_contents
         );
-        
+
         file_put_contents($wp_config_path, $wp_config_contents);
         $event->getIO()->write('...Done. Now applying pepper.');
         $event->getIO()->write('Just joking dude.');
@@ -151,28 +151,6 @@ class WpUpdateHooks
         return $value;
     }
 
-    public static function writeHtPassword(Event $event) {
-        $event->getIO()->write('htpasswd authentication settings...');
-        $event->getIO()->write('These settings will cause an authentication box to appear if a visitor arrives at a server environment that is not specified.');
-        $event->getIO()->write('By default a local server name must be specified');
-        $local_server_name = self::getBashValue($event, 'Please enter your local server domain without the protocol, e.g. "test.dev".');
-        $authuser = self::getBashValue($event, 'Please enter a username. This will be used on all environments if applicable.');
-        $clear_text_htpassword = self::getBashValue($event, 'Please enter a password. This will be used on all environments if applicable.');
-        $password = crypt($clear_text_htpassword, base64_encode($clear_text_htpassword));
-        $string = $authuser.':'.$password;
-        file_put_contents(__DIR__.'/../../.htpasswd', $string);
-
-        // replace contents in .htaccess
-        $htaccess_contents = file_get_contents(__DIR__.'/../../html/.htaccess');
-        $new_htaccess_contents = str_replace('{{htpassfile}}', realpath(__DIR__.'/../../.htpasswd'), $htaccess_contents);
-
-        $new_htaccess_contents = str_replace('{{localservername}}', $local_server_name , $new_htaccess_contents);
-        file_put_contents(__DIR__.'/../../html/.htaccess', $new_htaccess_contents);
-        $event->getIO()->write('...htpasswd authentication settings completed');
-        $event->getIO()->write('You may edit the configuration in "/html/.htaccess".');
-
-    }
-
     public static function moveCustomFiles(Event $event)
     {
         $event->getIO()->write('Moving files to safety before installing WordPress...');
@@ -198,6 +176,8 @@ class WpUpdateHooks
     public static function doBoilerplateAlreadySetupScript(Event $event)
     {
         $event->getIO()->write('The boilerplate was previously setup.');
+
+
 
         if(!file_exists(__DIR__.'/../../html')) {
             $event->getIO()->write('Please run "composer update" instead of "install"');

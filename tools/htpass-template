@@ -1,0 +1,5 @@
+AuthName "Restricted Area"
+AuthType Basic
+AuthUserFile {{htpassfile}}
+AuthGroupFile /
+Require valid-user
