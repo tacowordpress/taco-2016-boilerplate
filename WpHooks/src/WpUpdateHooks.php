@@ -63,9 +63,38 @@ class WpUpdateHooks
     {
         self::updateWpConfig($event);
         self::copyTheme($event);
+        self::setSalts($event);
         self::writeHtPassword($event);
         self::installComposerInTheme($event);
         self::printRemainingInstructions($event);
+    }
+
+    public static function setSalts(Event $event)
+    {
+        $event->getIO()->write('Applying salts to wp-config.php...');
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_URL, 'https://api.wordpress.org/secret-key/1.1/salt/');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        $wp_config_contents = file_get_contents(
+            $wp_config_path = __DIR__.'/../../html/wp-config.php'
+        );
+
+        $wp_config_contents = preg_replace(
+            '/(\/\*\*#@\+)(.|\s|\r|\n)*?(\/\*\*#@-\*\/)/',
+            $data,
+            $wp_config_contents
+        );
+        
+        file_put_contents($wp_config_path, $wp_config_contents);
+        $event->getIO()->write('...Done. Now applying pepper.');
+        $event->getIO()->write('Just joking dude.');
     }
 
     public static function copyTheme(Event $event)
